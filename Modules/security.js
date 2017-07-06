@@ -7,6 +7,9 @@ let statefulFWSprite;
 let statefulFWSprite2;
 let connectionTable;
 
+//IDS/IPS Sprite
+let IDS;
+
 let FOCUSED_SPRITE = null;
 
 function setStageACL(centerX, centerY, gameInstance){
@@ -28,8 +31,13 @@ function setStageStatefulFW(centerX, centerY, gameInstance){
     initPlatformerSprite(statefulFWSprite2, gameInstance);
 }
 
+function setStageIDS(centerX, centerY, gameInstance){
+    IDS = addSprite(["Intrusion Detection"], ["I am an IDS."], 'robot', centerX + 20, centerY, 0.2, 0, true, gameInstance).instance;
+    IDS.events.onInputDown.add(toggleClicked, {sprite: IDS}); 
+}
+
 /*
-    Helper functions section. These functions serve to be used by the main "setStage" methods above.
+    Helper functions. These functions serve to be used by the main "setStage" methods above.
 */
 function toggleClicked(){
     if (dialogueOpen == "moving"){

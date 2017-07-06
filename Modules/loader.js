@@ -5,6 +5,7 @@ let modules = [
     "sprite.js",
     "packet.js",
     "security.js",
+    "guide.js",
 ];
 
 for (let i = 0; i < modules.length; i++){

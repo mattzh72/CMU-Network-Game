@@ -54,3 +54,23 @@ function addPlayerControls(speed) {
         player.animations.play('idle');
     }
 }
+
+function addCameraControls(gameInstance){
+    if (controls.up.isDown)
+    {
+        gameInstance.camera.y -= 4;
+    }
+    else if (controls.down.isDown)
+    {
+        gameInstance.camera.y += 4;
+    }
+
+    if (controls.left.isDown)
+    {
+        gameInstance.camera.x -= 4;
+    }
+    else if (controls.right.isDown)
+    {
+        gameInstance.camera.x += 4;
+    }    
+}

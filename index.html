@@ -13,12 +13,19 @@
     <script src = "Testing/PreloadTest.js"></script>
     <script src = "Testing/TestLevel.js"></script>
     
+    <script src = "Stage1/Preload_1.js"></script>
+    <script src = "Stage1/Stage_1.js"></script>
+    
     <script src = "Stage2/Preload_2.js"></script>
     <script src = "Stage2/Stage_2.js"></script>
     
-    <body>
-        <script type="text/javascript">
-              WebFontConfig = {
+    <script src = "Stage3/Preload_3.js"></script>
+    <script src = "Stage3/Stage_3.js"></script>
+    
+    <body>        
+        <script type = "text/javascript">
+            //Load in Source Sans Pro from Google Fonts
+            var WebFontConfig = {
                 google: { families: [ 'Source+Sans+Pro::latin' ] }
               };
               (function() {
@@ -28,10 +35,10 @@
                     wf.async = 'true';
                     var s = document.getElementsByTagName('script')[0];
                     s.parentNode.insertBefore(wf, s);
-              })(); 
-        </script>
-        
-        <script type = "text/javascript">
+              })();
+            
+            //Load game configurations
+            //Scale mode is set to RESIZE so game will automatically reload/resize when game width changes
             window.onload = function(){
                 var config = {
                     width: window.innerWidth,
@@ -49,8 +56,14 @@
                 game.state.add('PreloadTest', Game.PreloadTest);
                 game.state.add('TestLevel', Game.TestLevel);
                 
+                game.state.add('Preload_1', Game.Preload_1);
+                game.state.add('Stage_1', Game.Stage_1);
+                
                 game.state.add('Preload_2', Game.Preload_2);
                 game.state.add('Stage_2', Game.Stage_2);
+                
+                game.state.add('Preload_3', Game.Preload_3);
+                game.state.add('Stage_3', Game.Stage_3);
                 
                 game.state.start('Boot');       
             }

@@ -119,6 +119,11 @@ function openDialogue(){
         setTimeout(openObj, 1250, title, this.gameInstance);
         setTimeout(openObj, 1250, icon, this.gameInstance);
         setTimeout(openObj, 1250, blurb, this.gameInstance);
+        
+        this.gameInstance.world.bringToTop(dialogueBox);
+        this.gameInstance.world.bringToTop(title);
+        this.gameInstance.world.bringToTop(blurb);
+        this.gameInstance.world.bringToTop(icon);
     }
 }
 
@@ -141,11 +146,11 @@ function openObj(object, gameInstance){
         return;
 
     let scale = 1;
-    if (typeof object.key == "string")
-        scale = 100/gameInstance.cache.getImage(object.key).width; 
+    let originalWidth = gameInstance.cache.getImage(object.key).width;
     
-    console.log(object.height);
-        
+    if (originalWidth > 100 && typeof object.key == "string")
+        scale = 80/gameInstance.cache.getImage(object.key).width; 
+            
     tween = gameInstance.add.tween(object.scale).to( { x: scale, y: scale }, 500, Phaser.Easing.Elastic.Out, true);
 
 }

@@ -1,4 +1,5 @@
 let map;
+let jsonObj;
 let background;
 let collision;
 let objects;

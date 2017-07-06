@@ -1,0 +1,15 @@
+
+###############################################################################
+
+	Platformer Art (Xeno Diversity) by Arsonide
+
+	------------------------------
+		
+		License (CC0)
+	http://creativecommons.org/publicdomain/zero/1.0/
+
+	You may use these graphics in personal and commercial projects.
+	Credit (Kenney or www.kenney.nl) would be nice but is not mandatory.
+	Credit Arsonide would also be nice but is not mandatory.
+
+###############################################################################
