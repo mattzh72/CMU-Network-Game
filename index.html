@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html>
+    <meta charset="utf-8">
+    <title>CMU Game</title>
+    
+<!--    libraries and custom scripts-->
+    <script src = "phaser.js"></script>
+    <script src = "Modules/loader.js"></script>
+    <script src = "Boot.js"></script>
+    
+<!--    Preloaders and Stages-->
+    <script src = "Testing/PreloadTest.js"></script>
+    <script src = "Testing/TestLevel.js"></script>
+    
+    <script src = "Stage2/Preload_2.js"></script>
+    <script src = "Stage2/Stage_2.js"></script>
+    
+    <body>
+        <script type="text/javascript">
+              WebFontConfig = {
+                google: { families: [ 'Source+Sans+Pro::latin' ] }
+              };
+              (function() {
+                    var wf = document.createElement('script');
+                    wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+                    wf.type = 'text/javascript';
+                    wf.async = 'true';
+                    var s = document.getElementsByTagName('script')[0];
+                    s.parentNode.insertBefore(wf, s);
+              })(); 
+        </script>
+        
+        <script type = "text/javascript">
+            window.onload = function(){
+                var config = {
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                    renderer: Phaser.AUTO,
+                    antialias: true,
+                    multiTexture: true,
+                    scaleMode: Phaser.ScaleManager.RESIZE,
+                }
+
+                var game = new Phaser.Game(config);
+                
+                game.state.add('Boot', Game.Boot);
+
+                game.state.add('PreloadTest', Game.PreloadTest);
+                game.state.add('TestLevel', Game.TestLevel);
+                
+                game.state.add('Preload_2', Game.Preload_2);
+                game.state.add('Stage_2', Game.Stage_2);
+                
+                game.state.start('Boot');       
+            }
+        </script>
+        
+    </body>
+
+</html>
