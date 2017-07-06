@@ -10,8 +10,17 @@ let connectionTable;
 //IDS/IPS Sprite
 let IDS;
 
+//The sprite the camera is focused on
 let FOCUSED_SPRITE = null;
 
+/**
+ * Sets the room for an ACL by adding the appropriate sprites and initializing their movements.
+ * All the positions of the sprites in this room are relative to params centerX and centerY.
+ * 
+ * @param {number} centerX      - The x position of the center of the room
+ * @param {number} centerY      - The x position of the center of the room
+ * @param {object} gameInstance - A copy of the game variable
+ */
 function setStageACL(centerX, centerY, gameInstance){
     ACLScreen = addSprite(["Access Control List"], ["I am an ACL."], 'ACLScreen', centerX, centerY, 0.25, 0, true, gameInstance).instance;
     
@@ -19,6 +28,14 @@ function setStageACL(centerX, centerY, gameInstance){
     initPlatformerSprite(ACLSprite, gameInstance);
 }
 
+/**
+ * Sets the room for an Stateful Firewall by adding the appropriate sprites and initializing their movements.
+ * All the positions of the sprites in this room are relative to params centerX and centerY.
+ * 
+ * @param {number} centerX      - The x position of the center of the room
+ * @param {number} centerY      - The x position of the center of the room
+ * @param {object} gameInstance - A copy of the game variable
+ */
 function setStageStatefulFW(centerX, centerY, gameInstance){
     ACLScreen = addSprite(["Access Control List"], ["I am an ACL."], 'ACLScreen', centerX + 20, centerY, 0.25, 0, true, gameInstance).instance;
 
@@ -31,20 +48,37 @@ function setStageStatefulFW(centerX, centerY, gameInstance){
     initPlatformerSprite(statefulFWSprite2, gameInstance);
 }
 
+/**
+ * Sets the room for an IDS by adding the appropriate sprites and initializing their movements.
+ * All the positions of the sprites in this room are relative to params centerX and centerY.
+ * 
+ * @param {number} centerX      - The x position of the center of the room
+ * @param {number} centerY      - The x position of the center of the room
+ * @param {object} gameInstance - A copy of the game variable
+ */
 function setStageIDS(centerX, centerY, gameInstance){
     IDS = addSprite(["Intrusion Detection"], ["I am an IDS."], 'robot', centerX + 20, centerY, 0.2, 0, true, gameInstance).instance;
     IDS.events.onInputDown.add(toggleClicked, {sprite: IDS}); 
 }
 
-/*
-    Helper functions. These functions serve to be used by the main "setStage" methods above.
-*/
+/**
+ * An internal function that is attached to the sprites in the rooms. 
+ * Once a sprite is clicked, this function is called, and changes FOCUSED_SPRITE, the sprite the camera is following, to the recently clicked sprite. 
+ */
 function toggleClicked(){
     if (dialogueOpen == "moving"){
         FOCUSED_SPRITE = this.sprite;
     }
 }
 
+/**
+ * An internal function that is used to initialize platformer sprites.
+ * Attaches animations to the sprite, and attaches the toggleClicked() function to an input listener.
+ * Attaches platformer sprite movement to the sprite as well.
+ * 
+ * @param {object} sprite       - The sprite to initialize
+ * @param {object} gameInstance - A copy of the game variable
+ */
 function initPlatformerSprite(sprite, gameInstance){
     sprite.animations.add('idle',["idle"],1,true);  
     sprite.animations.add('run',["walk_1", "walk_2"],5,true);

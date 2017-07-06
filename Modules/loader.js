@@ -1,5 +1,9 @@
+/**
+    Loads in all the module .js files in dynamically by inserting script tags in the index.html page
+*/
+
 let modules = [
-    "player.js",
+    "camera.js",
     "map.js",
     "dialogue.js",
     "sprite.js",

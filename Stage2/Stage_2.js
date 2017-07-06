@@ -15,9 +15,9 @@ Game.Stage_2.prototype = {
     },
     
     update: function(){   
-        addCollision(ACLSprite, layers, this);
-        addCollision(statefulFWSprite, layers, this);
-        addCollision(statefulFWSprite2, layers, this);
+        addCollision(ACLSprite, this);
+        addCollision(statefulFWSprite, this);
+        addCollision(statefulFWSprite2, this);
 
         updateDialoguePos(this);
         
