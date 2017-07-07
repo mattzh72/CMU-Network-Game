@@ -6,8 +6,11 @@ let guideSprite;
  * @param {String} text         - The dialogue array for the guide sprite.
  * @param {object} gameInstance - Holds a copy of the game variable
  */
-function initGuideSprite(text, gameInstance){    
-    guideSprite = addSprite(["Game Guide"], text, 'helperSprite', 0, 0, 0.5, 0, true, gameInstance).instance;
+function initGuideSprite(text, gameInstance){   
+    let guideSpriteData = addSprite(["Game Guide"], text, 'helperSprite', 0, 0, 0.4, 0, true, gameInstance);
+    guideSprite = guideSpriteData.instance;
+    
+    return guideSpriteData;
 }
 
 /**

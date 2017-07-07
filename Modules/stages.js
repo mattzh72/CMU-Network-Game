@@ -10,8 +10,14 @@ let connectionTable;
 //IDS/IPS Sprite
 let IDS;
 
+//Router Sprites
+let NAT;
+let routingTableSprite;
+let routingTable;
+
 //The sprite the camera is focused on
 let FOCUSED_SPRITE = null;
+
 
 /**
  * Sets the room for an ACL by adding the appropriate sprites and initializing their movements.
@@ -27,6 +33,7 @@ function setStageACL(centerX, centerY, gameInstance){
     ACLSprite = addSprite(["Stateless Firewall"], ["I am a stateless firewall."], 'ACLSprite', centerX, centerY, PLATFORMER_SCALE, 200, true, gameInstance).instance;
     initPlatformerSprite(ACLSprite, gameInstance);
 }
+
 
 /**
  * Sets the room for an Stateful Firewall by adding the appropriate sprites and initializing their movements.
@@ -48,6 +55,7 @@ function setStageStatefulFW(centerX, centerY, gameInstance){
     initPlatformerSprite(statefulFWSprite2, gameInstance);
 }
 
+
 /**
  * Sets the room for an IDS by adding the appropriate sprites and initializing their movements.
  * All the positions of the sprites in this room are relative to params centerX and centerY.
@@ -56,10 +64,26 @@ function setStageStatefulFW(centerX, centerY, gameInstance){
  * @param {number} centerY      - The x position of the center of the room
  * @param {object} gameInstance - A copy of the game variable
  */
-function setStageIDS(centerX, centerY, gameInstance){
-    IDS = addSprite(["Intrusion Detection"], ["I am an IDS."], 'robot', centerX + 20, centerY, 0.2, 0, true, gameInstance).instance;
+function setStageIDS(centerX, centerY, packetStreamObj, gameInstance){
+    IDS = addSprite(["Intrusion Detection"], ["I am an IDS."], 'robot', centerX, centerY, 0.15, 0, true, gameInstance).instance;
     IDS.events.onInputDown.add(toggleClicked, {sprite: IDS}); 
+    
+    gameInstance.time.events.loop(Phaser.Timer.SECOND * 1, toggleCameraFocus, {sprite: IDS, isPlatformerSprite: false, img: 'robot', altImg: 'robotBack', packetStreamObj: packetStreamObj, startX: centerX, startY: centerY,  gameInstance: gameInstance});   
 }
+
+
+function setStageRouter(centerX, centerY, gameInstance){
+    routingTable = addSprite(["Routing Table"], routingTableDialogue, 'routingTable', centerX - 50, centerY, 0.32, 0, true, gameInstance).instance; 
+    routingTable.events.onInputDown.add(toggleClicked, {sprite: routingTable}); 
+
+    
+    NAT = addSprite(["NAT"], NATDialogue, 'NAT', centerX + 40, centerY, PLATFORMER_SCALE, 200 , true, gameInstance).instance;
+    initPlatformerSprite(NAT, gameInstance);
+
+    routingTableSprite = addSprite(["Routing Table"], routingTableSpriteDialogue, 'routingTableSprite', centerX - 40, centerY, PLATFORMER_SCALE, 200 , true, gameInstance).instance;
+    initPlatformerSprite(routingTableSprite, gameInstance);
+}
+
 
 /**
  * An internal function that is attached to the sprites in the rooms. 
@@ -70,6 +94,7 @@ function toggleClicked(){
         FOCUSED_SPRITE = this.sprite;
     }
 }
+
 
 /**
  * An internal function that is used to initialize platformer sprites.
@@ -82,10 +107,8 @@ function toggleClicked(){
 function initPlatformerSprite(sprite, gameInstance){
     sprite.animations.add('idle',["idle"],1,true);  
     sprite.animations.add('run',["walk_1", "walk_2"],5,true);
-    
-    sprite.events.onInputDown.add(toggleClicked, {sprite: sprite}); 
-    
-    gameInstance.time.events.loop(Phaser.Timer.SECOND * 1, movePlatformerSprite, {sprite: sprite, defaultFollow:[500, 500], gameInstance: gameInstance});   
+        
+    gameInstance.time.events.loop(Phaser.Timer.SECOND * 1, toggleCameraFocus, {sprite: sprite, isPlatformerSprite: true, gameInstance: gameInstance});   
 }
 
 

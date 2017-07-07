@@ -60,7 +60,7 @@ function readJSON(file){
  */
 function addCollision(sprite, gameInstance){
     for (let i = 1; i < layers.length; i ++)
-        gameInstance.physics.arcade.collide(sprite, layerArr[i]);
+        gameInstance.physics.arcade.collide(sprite, layers[i]);
 }
 
 

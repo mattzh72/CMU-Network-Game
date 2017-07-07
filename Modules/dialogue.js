@@ -159,6 +159,8 @@ function backTxt() {
  * The text is displayed with a time delay for aesthetic purposes.
  */
 function openDialogue() {
+    textIndex = 0;
+    
     if (dialogueOpen === "false") {
         dialogueOpen = "moving";
 
@@ -237,12 +239,12 @@ function openObj(object, gameInstance) {
         return;
 
     let scale = 1;
-    let originalWidth = gameInstance.cache.getImage(object.key).width;
 
     //If the object image size is too big, scale it down appropriately for an icon
-    if (originalWidth > 100 && typeof object.key == "string")
-        scale = 80 / originalWidth;
-
+    if (typeof object.key == "string" && gameInstance.cache.getImage(object.key).width > 90){
+        scale = 90 / gameInstance.cache.getImage(object.key).width;
+    }
+    
     tween = gameInstance.add.tween(object.scale).to({
         x: scale,
         y: scale

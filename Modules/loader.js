@@ -1,15 +1,15 @@
 /**
     Loads in all the module .js files in dynamically by inserting script tags in the index.html page
 */
-
 let modules = [
     "camera.js",
     "map.js",
     "dialogue.js",
     "sprite.js",
     "packet.js",
-    "security.js",
+    "stages.js",
     "guide.js",
+    "lessons.js",
 ];
 
 for (let i = 0; i < modules.length; i++){

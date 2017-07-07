@@ -11,7 +11,6 @@ Game.PreloadTest.prototype = {
     this.load.image('robot', 'Testing/assets/robot.png');
     this.load.image('packet', 'Testing/assets/packet.png');
 
-    this.load.spritesheet('player','Testing/assets/player.png',72, 96);
 //    this.load.atlas('player', 'Testing/assets/player_alt.png', 'Testing/assets/player_alt.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
         
         
