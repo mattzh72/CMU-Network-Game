@@ -19,7 +19,7 @@ Download brackets at http://brackets.io/. Brackets editor has a built in local s
 - Avoid opening and closing Developer Tools on Chrome too often. It forces the game to recalculate and re-render the game world size and positions, which may slow down your computer.
 
 # Code Overview
-##Folders:
+## Folders:
 The **Modules** folder contains many of the custom-written code that helps processes this game specifically. This includes the following files thus far:
 - `loader.js`: Loads all the *Modules* files by manipulating the index.html dynamically.
 - `camera.js`: Defines and adds functionality for moving the in-game camera.
