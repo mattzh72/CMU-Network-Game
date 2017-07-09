@@ -23,6 +23,11 @@ function initDialogue(gameInstance) {
     dialogueBox = gameInstance.add.sprite(gameInstance.camera.x + window.innerWidth / 2, gameInstance.camera.y + window.innerHeight, 'dialogue');
     dialogueBox.anchor.setTo(0.5, 0.5);
     gameInstance.physics.arcade.enable(dialogueBox);
+    dialogueBox.inputEnabled = true;
+    dialogueBox.input.priorityID = 1;
+    dialogueBox.input.useHandCursor = true;
+    dialogueBox.events.onInputDown.add(nextTxt, gameInstance);
+    
 
     //Initialize the icon, textArray, blurb, and title to blank values.
     textArray = [];
@@ -109,18 +114,11 @@ function initIcon(image, gameInstance) {
  * @param {object} gameInstance - Holds a copy of the game variable.
  */
 function initDialogueControls(gameInstance) {
-    //Add three keys (right, left, and C).
     let dialogueControls = {
-        right: gameInstance.input.keyboard.addKey(Phaser.Keyboard.RIGHT),
-        left: gameInstance.input.keyboard.addKey(Phaser.Keyboard.LEFT),
         close: gameInstance.input.keyboard.addKey(Phaser.Keyboard.C),
     };
 
-    //Right is used to advance text forward
-    //Left is used to move text backwards
     //C is used to close dialogue box
-    dialogueControls.right.onDown.add(nextTxt, gameInstance);
-    dialogueControls.left.onDown.add(backTxt, gameInstance);
     dialogueControls.close.onDown.add(closeDialogue, {
         gameInstance: gameInstance
     })
@@ -135,19 +133,6 @@ function initDialogueControls(gameInstance) {
 function nextTxt() {
     if (textIndex + 1 < textArray.length) {
         textIndex += 1;
-        blurb.setText(textArray[textIndex]);
-    }
-}
-
-/**
- * An internal function that decrements the index count. 
- * The count correspondes to the index of textArray.
- * 
- * Sets the blurb to the previous text in textArray, if available.
- */
-function backTxt() {
-    if (textIndex - 1 >= 0) {
-        textIndex -= 1;
         blurb.setText(textArray[textIndex]);
     }
 }
@@ -248,7 +233,7 @@ function openObj(object, gameInstance) {
     tween = gameInstance.add.tween(object.scale).to({
         x: scale,
         y: scale
-    }, 500, Phaser.Easing.Elastic.Out, true);
+    }, 100, Phaser.Easing.Elastic.Out, true);
 
 }
 
@@ -266,5 +251,5 @@ function closeObj(object, gameInstance) {
     tween = gameInstance.add.tween(object.scale).to({
         x: 0,
         y: 0
-    }, 50, Phaser.Easing.Elastic.In, true);
+    }, 50, Phaser.Easing.Linear.In, true);
 }

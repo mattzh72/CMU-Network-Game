@@ -3,8 +3,8 @@
  <tileset firstgid="1" name="room" tilewidth="32" tileheight="32" tilecount="414" columns="23">
   <image source="room.png" trans="ffffff" width="738" height="600"/>
  </tileset>
- <tileset firstgid="415" name="pipe_body" tilewidth="32" tileheight="32" tilecount="8" columns="2">
-  <image source="../../Stage2/Map/pipe_body.png" trans="ffffff" width="95" height="147"/>
+ <tileset firstgid="415" name="pipe_connector" tilewidth="32" tileheight="32" tilecount="360" columns="20">
+  <image source="pipe_connector.png" trans="ffffff" width="640" height="598"/>
  </tileset>
  <layer name="background" width="46" height="25">
   <data encoding="base64">

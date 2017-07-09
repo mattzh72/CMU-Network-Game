@@ -2,6 +2,7 @@
 let PLATFORMER_SCALE = 0.4;
 let PLATFORMER_SPEED = 60;
 
+
 /**
  * Switches the camera to follow the most recently clicked sprite
  */
@@ -24,6 +25,7 @@ function toggleCameraFocus(){
             this.sprite.animations.play('idle');
     }   
 }
+
 
 /**
  * A movement pattern for any flying sprites (sprites without gravity)
@@ -51,6 +53,7 @@ function moveFlyingSprite(sprite, img, altImg, packetStreamArr, startX, startY, 
     }
 }
 
+
 /**
  * This is attached to a custom game loop in security.js for the platformer security sprites (sprites with gravity)
  * Uses getRandomInt(min, max) to choose whether to walk around or stay idle.
@@ -74,6 +77,7 @@ function movePlatformerSprite(sprite) {
     }
 }
 
+
 /**
  * An internal function that generates a random integer between min and max inclusive.
  * @param   {number} min - The minimum in the range 
@@ -84,6 +88,7 @@ function movePlatformerSprite(sprite) {
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
 
 /**
  * Adds a sprite with the given parameters to the game world.
@@ -114,26 +119,29 @@ function addSprite(title, txt, image, posX, posY, scale, gravity, inputBool, gam
     gameInstance.physics.arcade.enable(sprite);
     sprite.body.gravity.y = gravity;
     sprite.body.collideWorldBounds = true;
-    sprite.inputEnabled = inputBool;
-    sprite.input.priorityID = 1;
-    sprite.input.useHandCursor = true;
-    sprite.events.onInputDown.add(openDialogue, {
-        spriteData: spriteData,
-        gameInstance: gameInstance
-    });
     
-    sprite.events.onInputOver.add(tweenScale, {
-        sprite: sprite,
-        xScale: scale + 0.05,
-        yScale: scale + 0.05,
-        gameInstance: gameInstance,
-    });
-    sprite.events.onInputOut.add(tweenScale, {
-        sprite: sprite,
-        xScale: scale,
-        yScale: scale,
-        gameInstance: gameInstance,
-    });
+    if (inputBool === true){
+        sprite.inputEnabled = inputBool;
+        sprite.input.priorityID = 1;
+        sprite.input.useHandCursor = true;
+        sprite.events.onInputDown.add(openDialogue, {
+            spriteData: spriteData,
+            gameInstance: gameInstance
+        });
+
+        sprite.events.onInputOver.add(tweenScale, {
+            sprite: sprite,
+            xScale: scale + 0.05,
+            yScale: scale + 0.05,
+            gameInstance: gameInstance,
+        });
+        sprite.events.onInputOut.add(tweenScale, {
+            sprite: sprite,
+            xScale: scale,
+            yScale: scale,
+            gameInstance: gameInstance,
+        });
+    }
 
     return spriteData;
 }

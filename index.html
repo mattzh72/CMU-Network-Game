@@ -8,6 +8,7 @@
     <script src = "phaser.js"></script>
     <script src = "Modules/loader.js"></script>
     <script src = "Boot.js"></script>
+    <script src = "SaveCPU.js"></script>
     
 <!--    Preloaders and Stages-->
     <script src = "Testing/PreloadTest.js"></script>
@@ -66,6 +67,9 @@
                 game.state.add('Stage_3', Game.Stage_3);
                 
                 game.state.start('Boot');       
+                
+                this.game.plugins.add(Phaser.Plugin.SaveCPU);
+
             }
         </script>
         
