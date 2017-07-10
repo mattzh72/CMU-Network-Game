@@ -50,7 +50,7 @@ The **Stage** folders are numbered numerically. These contain the individual les
 
 The **Testing** folder contains scripts used primarily to test new modules in the *Modules* folder before deploying it to the *Stage* folders.
 
-# How can I make my own lessons?
+# How can I make my own stages?
 Before starting to develop, it's good to familiarize yourself with [Phaser](https://phaser.io/) first. Phaser is extremely well documented, with hundreds of code samples and official public [documentation](https://photonstorm.github.io/phaser-ce/). The basic Phaser event loop goes like this:
 
 ### Preload: 
@@ -107,6 +107,14 @@ update: function () {
 
     updatePacketPos(this.packetStream1, this); //updates the position of the packets in network traffic
 ```
+
+## Now that I understand Phaser, what should I do?
+Take a good look at the documentation for for the files in **Modules**. It handles all the heavy lifting developers need to program their game, from reading in map files and initializing the game world to even predefined rooms for common computer network components, including the *router, ACL, Stateful Firewalls, IDS/IPS,* and *proxies*.
+
+When making new lessons/stages, put all of the files in a organized manner into a singular folder, named StageN, with N being the next highest integer stage number. The folder contents should be organized in the same way as the other folders, with a **Map** folder containing game assets, a **Preload.js** file with the `preload` function, and a **StageN.js** (N being an integer) for the `create` and `update` functions. For further details, look over the existing folders for examples.
+
+Additionally, if you are still lost, there is a folder named **Shell Stage** that has a the basic framework, organizational structure, and `js` files set up for you already.
+
 
 # FAQ 
 *Question: When I try to run the files, I see this error in my console:*
