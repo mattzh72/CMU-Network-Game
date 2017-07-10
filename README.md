@@ -53,16 +53,16 @@ The **Testing** folder contains scripts used primarily to test new modules in th
 #How can I make my own lessons?
 Before starting to develop, it's good to familiarize yourself with [Phaser](https://phaser.io/) first. Phaser is extremely well documented, with hundreds of code samples and official public [documentation](https://photonstorm.github.io/phaser-ce/). The basic Phaser event loop goes like this:
 
-###Preload: 
+### Preload: 
 This function is called first. It should contain code to handle the loading of assets needed by your game. While any code can be written here, it is suggested to keep it simply to loading assets. 
-######Function Syntax:
+###### Function Syntax:
 ```javascript
 create: function () {
 ...
 },
 ```
 
-######Example Body Code:
+###### Example Body Code:
 ```javascript
 this.load.tilemap('map', 'Stage2/Map/map_2.json', null, Phaser.Tilemap.TILED_JSON);  
 this.load.atlas('StatefulFW', 'Modules/Assets/StatefulFW.png', 'Modules/assets/StatefulFW.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
@@ -70,15 +70,15 @@ this.load.image('ConnectionTable', 'Modules/Assets/small_screens.png');
 ```
 The structure is as follows. The first parameter in `'` is the key (for example, `'ConnectionTable'`), which is mapped to a URL of the asset (for example, `'Modules/Assets/small_screens.png'`). The parameters after are usually extra parameters to processs more complicated types of assets, such as JSON hash arrays or tilemaps.
 
-###Create: 
+### Create: 
 In this function, developers can safely create [sprites](http://phaser.io/docs/2.4.4/Phaser.Sprite.html), particles and anything else needed that may use assets the preload will now have loaded. Typically this function would contain the bulk of the set-up code, creating game objects and the like. 
-######Function Syntax:
+###### Function Syntax:
 ```javascript
 create: function () {
     ...
 },
 ```
-######Example Body Code:
+###### Example Body Code:
 ```javascript
 this.physics.startSystem(Phaser.Physics.ARCADE); //starts the physics system
         addControls(this); //function that maps keyboard input to game events
@@ -89,16 +89,16 @@ this.physics.startSystem(Phaser.Physics.ARCADE); //starts the physics system
 
 Many of the basic things needed to set up your game world will have been pre-written in a `.js` file in the **Modules** folder.
 
-###Update: 
+### Update: 
 The update functions are called every frame. So on a desktop that'd be around 60 time per second. In update this is where developers do things like listen or poll for input to move a player, check for object collision, etc. It's the heart of the game, and it is a continous loop that makes the game come alive. 
-######Function Syntax:
+###### Function Syntax:
 ```javascript
 update: function () {
     ...
 },
 ```
 
-######Example Body Code:
+###### Example Body Code:
 ```javascript
     updateDialoguePos(this); //updates the position of the dialogue box based on input
     pollCameraControls(this); //checks for keyboard input to move camera 
