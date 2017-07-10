@@ -179,9 +179,20 @@ You can then start the function `Game.Stage_2` through the key `'Stage_2'`:
 Note that starting a stage function is usually placed in the `Preload.js` file, as you need preload the  necessary assets before creating the stage.
 
 
->Why does the code use the keyword `this`? In the Phaser docs, functions are written as using game: for example, `game.physics.startSystem(Phaser.Physics.ARCADE)`. But in your files, `game` is accessed as `this.physics.startSystem(Phaser.Physics.ARCADE)` using keyword `this`. Why is that?
+>Why does the code use the keyword `this`? In the Phaser docs, functions are written as using game. For example: 
+```javascript 
+game.physics.startSystem(Phaser.Physics.ARCADE)
+``` 
+But in your files, `game` is accessed as 
+```javascript
+this.physics.startSystem(Phaser.Physics.ARCADE)```
+using keyword `this`. Why is that?
 
-Well, note that `game` is passed in at the top of every new property to `Game`: for example, `Game.Stage_2 = function(game)`. The `create` and `update` functions are part of the prototype of the function. Thus, in the `create` and `update`, `game` is accessed as `this`. As an extra note, in the module functions, `game` is supposed to be passed into the parameter `gameInstance`.
+Well, note that `game` is passed in at the top of every new property to `Game`. For example:
+```javascript
+`Game.Stage_2 = function(game)`.
+```
+The `create` and `update` functions are part of the prototype of the function. Thus, in the `create` and `update`, `game` is accessed as `this`. As an extra note, in the module functions, `game` is supposed to be passed into the parameter `gameInstance`.
 
 
 
