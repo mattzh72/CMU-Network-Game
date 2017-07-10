@@ -180,13 +180,13 @@ Note that starting a stage function is usually placed in the `Preload.js` file, 
 
 
 >Why does the code use the keyword `this`? In the Phaser docs, functions are written as using game. For example: 
-```javascript 
-game.physics.startSystem(Phaser.Physics.ARCADE)
-``` 
-But in your files, `game` is accessed as 
-```javascript
-this.physics.startSystem(Phaser.Physics.ARCADE)```
-using keyword `this`. Why is that?
+>```javascript 
+>game.physics.startSystem(Phaser.Physics.ARCADE)
+>``` 
+>But in your files, `game` is accessed as 
+>```javascript
+>this.physics.startSystem(Phaser.Physics.ARCADE)```
+>using keyword `this`. Why is that?
 
 Well, note that `game` is passed in at the top of every new property to `Game`. For example:
 ```javascript
