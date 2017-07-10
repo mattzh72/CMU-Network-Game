@@ -45,3 +45,8 @@ let clientDialogue = [
     "Advanced Terminology: A fat client will depend on local storage and CPU - thin clients only use their CPU.",
     "Press C to Close.",
 ];
+
+let proxyDialogue = [
+    "I am a proxy."
+    
+];

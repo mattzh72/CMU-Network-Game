@@ -26,6 +26,9 @@ Game.Preload_2.prototype = {
     //ASSETS FOR HELPER SPRITE
     this.load.image('helperSprite', 'Graphics/alien-ufo-pack/PNG/shipGreen_manned.png');
         
+    //ASSETS FOR PROXY
+    this.load.image('proxy', 'Modules/Assets/proxy.png');
+        
     //PRELOAD JSON MAP FILE
     readJSON('Stage2/Map/map_2.json');
         

@@ -3,6 +3,7 @@ Game.Stage_2 = function(game){
     this.packetStream2 = {};
     this.packetStream3 = {};
     this.packetStream4 = {}; 
+    this.packetStream5 = {};
 };
 
 Game.Stage_2.prototype = {
@@ -25,6 +26,11 @@ Game.Stage_2.prototype = {
         //IDS BOTTOM RIGHT
         this.packetStream3 = initPacketStream(1020, 1100, 1420, 1100, false, this);         
         setStageIDS(1300, 970, this.packetStream3, this);
+        
+        //PROXY BOTTOM LEFT
+        this.packetStream5= initPacketStream(440, 1140, 645, 1135, false, this);         
+        this.packetStream4 = initPacketStream(750, 1085, 850, 1100, false, this);    
+        setStageProxy(650, 970, this);
 
         
         let guideTextArr = [
@@ -40,6 +46,10 @@ Game.Stage_2.prototype = {
         updatePacketPos(this.packetStream1, this);
         updatePacketPos(this.packetStream2, this);
         updatePacketPos(this.packetStream3, this);
+        updatePacketPos(this.packetStream4, this);
+        updatePacketPos(this.packetStream5, this);
+
+
 
         addCollision(ACLSprite, this);
         addCollision(statefulFWSprite, this);

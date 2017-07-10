@@ -28770,12 +28770,12 @@ Phaser.StateManager.prototype = {
             {
                 layers[i].resize(width,height);
             }
+            this.game.physics.arcade.isPaused=true;
         }
         catch(err){};
         
         //Everytime the method is invoked, the camera returns back to the middle.
         this.game.camera.setPosition(this.game.world.centerX - window.innerWidth/2, this.game.world.centerY - window.innerHeight/2);
-
 
         if (this.onResizeCallback)
         {

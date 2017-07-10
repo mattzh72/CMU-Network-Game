@@ -24,6 +24,10 @@ function addControls(gameInstance){
  * @param {object} gameInstance - A copy of the game variable
  */
 function pollCameraControls(gameInstance){
+    if (gameInstance.input.activePointer.isDown){
+         gameInstance.physics.arcade.isPaused=false; //when player clicks on screen after resizing, game continues
+    }
+    
     if (controls.up.isDown)
     {
         gameInstance.camera.y -= 4;

@@ -15,6 +15,9 @@ let NAT;
 let routingTableSprite;
 let routingTable;
 
+//Proxy Sprites
+let proxy;
+
 //The sprite the camera is focused on
 let FOCUSED_SPRITE = null;
 
@@ -82,6 +85,11 @@ function setStageRouter(centerX, centerY, gameInstance){
 
     routingTableSprite = addSprite(["Routing Table"], routingTableSpriteDialogue, 'routingTableSprite', centerX - 40, centerY, PLATFORMER_SCALE, 200 , true, gameInstance).instance;
     initPlatformerSprite(routingTableSprite, gameInstance);
+}
+
+function setStageProxy(centerX, centerY, gameInstance){
+    proxy = addSprite(["Proxy"], proxyDialogue, 'proxy', centerX, centerY + 140, 0.35, 0, true, gameInstance).instance; 
+    proxy.events.onInputDown.add(toggleClicked, {sprite: proxy}); 
 }
 
 

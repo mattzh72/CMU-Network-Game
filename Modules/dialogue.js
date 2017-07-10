@@ -115,7 +115,7 @@ function initIcon(image, gameInstance) {
  */
 function initDialogueControls(gameInstance) {
     let dialogueControls = {
-        close: gameInstance.input.keyboard.addKey(Phaser.Keyboard.C),
+        close: gameInstance.input.keyboard.addKey(Phaser.Keyboard.ESC),
     };
 
     //C is used to close dialogue box
@@ -186,7 +186,9 @@ function openDialogue() {
         this.gameInstance.world.bringToTop(title);
         this.gameInstance.world.bringToTop(blurb);
         this.gameInstance.world.bringToTop(icon);
+        
     }
+    
 }
 
 /**
