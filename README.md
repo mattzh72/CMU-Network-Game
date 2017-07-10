@@ -18,7 +18,7 @@ The player placed right inside a computer network and is encouraged to roam arou
 
 # How do I use this? 
 ## Running the Files
-To run the files, you will need to host a local server on your computer. This is to allow the HTTP requests to fire properly.
+To run the files, you will need to host a local server on your computer. This is to allow the `HTTP` requests to fire properly.
 
 ### Python Web Server:
 Download Python if you haven't already. Go into the directory of the 'index.html' file and run the command `python -m SimpleHTTPServer 8000` in command line. Load the URL `http://localhost:8000/` into your browser.
