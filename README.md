@@ -50,7 +50,7 @@ The **Stage** folders are numbered numerically. These contain the individual les
 
 The **Testing** folder contains scripts used primarily to test new modules in the *Modules* folder before deploying it to the *Stage* folders.
 
-#How can I make my own lessons?
+# How can I make my own lessons?
 Before starting to develop, it's good to familiarize yourself with [Phaser](https://phaser.io/) first. Phaser is extremely well documented, with hundreds of code samples and official public [documentation](https://photonstorm.github.io/phaser-ce/). The basic Phaser event loop goes like this:
 
 ### Preload: 
