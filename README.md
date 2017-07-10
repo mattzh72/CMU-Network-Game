@@ -191,7 +191,7 @@ Note that starting a stage function is usually placed in the `Preload.js` file, 
 
 Well, note that `game` is passed in at the top of every new property to `Game`. For example:
 ```javascript
-`Game.Stage_2 = function(game)`.
+Game.Stage_2 = function(game).
 ```
 The `create` and `update` functions are part of the prototype of the function. Thus, in the `create` and `update`, `game` is accessed as `this`. As an extra note, in the module functions, `game` is supposed to be passed into the parameter `gameInstance`.
 
