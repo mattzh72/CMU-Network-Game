@@ -84,7 +84,7 @@ Phaser.Plugin.SaveCPU.prototype.init = function () {
     this._tsdiff = 0;    
 
     // fps default
-    this.renderOnFPS = 30;
+    this.renderOnFPS = 60; //change for CPU usage
     this.renderOnPointerChange = false;
     this.renderDirty = true;
     

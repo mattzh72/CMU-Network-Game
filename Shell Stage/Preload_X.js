@@ -19,3 +19,6 @@ Game.Preload_X.prototype = {
         this.state.start('Stage_X');
     }
 };
+
+
+

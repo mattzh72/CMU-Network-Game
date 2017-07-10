@@ -7,6 +7,9 @@ Game.Boot.prototype = {
         this.input.maxPointers = 1;
         
         this.stage.disableVisibilityChange = true; 
+        
+        this.add.plugin(Phaser.Plugin.SaveCPU);
+
     },
     
     preload:function(){
