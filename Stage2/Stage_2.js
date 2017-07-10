@@ -50,7 +50,7 @@ Game.Stage_2.prototype = {
 
         updateDialoguePos(this);
         
-        addCameraControls(this);
+        pollCameraControls(this);
         
     }, 
 }

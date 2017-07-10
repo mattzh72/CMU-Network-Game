@@ -61,7 +61,7 @@ Game.Stage_1.prototype = {
 
     update: function () {
         updateDialoguePos(this);
-        addCameraControls(this);
+        pollCameraControls(this);
         updateHelperSpritePos(this);
 
         addCollision(NAT, this);

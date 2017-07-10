@@ -23,7 +23,7 @@ function addControls(gameInstance){
  * 
  * @param {object} gameInstance - A copy of the game variable
  */
-function addCameraControls(gameInstance){
+function pollCameraControls(gameInstance){
     if (controls.up.isDown)
     {
         gameInstance.camera.y -= 4;
