@@ -56,7 +56,7 @@ The **Modules** folder contains many of the custom-written code that helps proce
 - `packet.js`: Renders an animation of a packet stream by calculating positions and velocities.
 - `sprite.js`: Defines a basic framework for adding in-game sprites. Includes more functions defining different types of sprite movement.
 - `stages.js`: Includes stages representing network functions. Functions are used to populate an area with sprites in a pre-determined way.
-- *Assets*: Includes global assets used in various module files. This includes `PNG` graphics and `JSON-TP-HASH` spritesheets for character graphics. A big thanks to [Maggie Yuan](https://www.pinterest.com/magyuanca/) for contributing to the graphics!
+- *Assets*: Includes global assets used in various module files. This includes `PNG` graphics and `JSON-TP-HASH` spritesheets for character graphics. A big thanks to **Maggie Yuan** for contributing to the graphics!
 
 The **Graphics** folder contains external graphics that are used in this game. A big thanks to the [Kenney Group](http://kenney.nl/) for contributing to the graphics!
 
