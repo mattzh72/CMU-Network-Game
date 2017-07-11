@@ -4,7 +4,6 @@ let ACLScreen;
 
 //Stateful Firewall Stage Sprites
 let statefulFWSprite;
-let statefulFWSprite2;
 let connectionTable;
 
 //IDS/IPS Sprite
@@ -33,7 +32,7 @@ let FOCUSED_SPRITE = null;
  * @param {object} gameInstance - A copy of the game variable
  */
 function setStageACL(centerX, centerY, gameInstance){
-    ACLScreen = addSprite(["Access Control List"], ["I am an ACL."], 'ACLScreen', centerX, centerY, 0.25, 0, true, gameInstance).instance;
+    ACLScreen = addSprite(["Access Control List"], ["I am an ACL."], 'ACLScreen', centerX, centerY, 0.3, 0, true, gameInstance).instance;
     
     ACLSprite = addSprite(["Stateless Firewall"], ["I am a stateless firewall."], 'ACLSprite', centerX, centerY, PLATFORMER_SCALE, 200, true, gameInstance).instance;
     initPlatformerSprite(ACLSprite, gameInstance);
@@ -49,15 +48,10 @@ function setStageACL(centerX, centerY, gameInstance){
  * @param {object} gameInstance - A copy of the game variable
  */
 function setStageStatefulFW(centerX, centerY, gameInstance){
-    ACLScreen = addSprite(["Access Control List"], ["I am an ACL."], 'ACLScreen', centerX + 20, centerY, 0.25, 0, true, gameInstance).instance;
-
-    connectionTable = addSprite(["Connection Table"], ["I am an connnection table."], 'ConnectionTable', centerX - 170, centerY + 40, 0.25, 0, true, gameInstance).instance;
+    connectionTable = addSprite(["Connection Table"], ["I am an connnection table."], 'ConnectionTable', centerX, centerY + 20, 0.35, 0, true, gameInstance).instance;
     
     statefulFWSprite = addSprite(["Stateful Firewall"], ["I am Stateful."], 'StatefulFW', centerX, centerY, PLATFORMER_SCALE, 200, true, gameInstance).instance;    
     initPlatformerSprite(statefulFWSprite, gameInstance);
-
-    statefulFWSprite2 = addSprite(["Stateful Firewall"], ["I am Stateful."], 'StatefulFW', centerX - 100, centerY, PLATFORMER_SCALE, 200, true, gameInstance).instance; 
-    initPlatformerSprite(statefulFWSprite2, gameInstance);
 }
 
 

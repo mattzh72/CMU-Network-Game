@@ -6,12 +6,12 @@ Game.Preload_2.prototype = {
     //LOAD ASSETS
     
     //ASSETS FOR MAP
-    this.load.tilemap('map', 'Stage2/Map/map_2.json', null, Phaser.Tilemap.TILED_JSON);  
-    this.load.image('tileset4','Stage2/Map/Rooms/green_room.png');
-    this.load.image('tileset2','Stage2/Map/Rooms/pink_room.png');
-    this.load.image('tileset3','Stage2/Map/Rooms/sand_room.png');
-    this.load.image('tileset5','Stage2/Map/Rooms/purple_room.png');
+    this.load.tilemap('map', 'Stage2/Map/map_2.json', null, Phaser.Tilemap.TILED_JSON); 
     this.load.image('tileset1','Stage2/Map/pipe_opening.png');
+    this.load.image('tileset2','Stage2/Map/Rooms/green_room.png');
+    this.load.image('tileset3','Stage2/Map/Rooms/pink_room.png');
+    this.load.image('tileset4','Stage2/Map/Rooms/purple_room.png');
+    this.load.image('tileset5','Stage2/Map/Rooms/sand_room.png');
     this.load.image('dialogue', 'Modules/Assets/dialogue.png');
    
     //ASSETS FOR ACL 

@@ -18,10 +18,10 @@ Game.Preload_1.prototype = {
     this.load.image('laptop','Stage1/Map/laptop.png');
         
     //ASSETS FOR SERVER
-    this.load.image('server1','Stage1/Map/Servers/1.png');
-    this.load.image('server2','Stage1/Map/Servers/2.png');
-    this.load.image('server3','Stage1/Map/Servers/3.png');
-    this.load.image('server4','Stage1/Map/Servers/4.png');
+    this.load.image('server1','Stage1/Map/server_1.png');
+    this.load.image('server2','Stage1/Map/server_2.png');
+    this.load.image('server3','Stage1/Map/server_3.png');
+    this.load.image('server4','Stage1/Map/server_4.png');
         
     //ASSETS FOR ROUTER
     this.load.atlas('NAT', 'Modules/Assets/NAT.png', 'Modules/assets/NAT.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);

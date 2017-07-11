@@ -15,23 +15,22 @@ Game.Stage_2.prototype = {
         initMap('map', ['tileset1', 'tileset2', 'tileset3', 'tileset4', 'tileset5'], this);
         initDialogue(this);
         
-        //ACL RROOM TOP LEFT
-        this.packetStream1 = initPacketStream(440, 530, 850, 530, false, this);      
-        setStageACL(650, 620, this);
+        //ACL  
+        this.packetStream1 = initPacketStream(610, 260, 1000, 260, false, this);         
+        setStageACL(this.world.centerX, 350, this);
         
-        //STATEFUL FW TOP RIGHT
-        this.packetStream2 = initPacketStream(1020, 530, 1420, 530, false, this);         
-        setStageStatefulFW(1300, 620, this);
+        //STATEFUL FW 
+        this.packetStream2 = initPacketStream(610, 810, 1000, 810, false, this);         
+        setStageStatefulFW(this.world.centerX, 900, this);
         
-        //IDS BOTTOM RIGHT
-        this.packetStream3 = initPacketStream(1020, 1100, 1420, 1100, false, this);         
-        setStageIDS(1300, 970, this.packetStream3, this);
+        //PROXY 
+        this.packetStream3= initPacketStream(610, 1525, 800, 1510, false, this);         
+        this.packetStream4 = initPacketStream(800, 1460, 1000, 1455, false, this);  
+        setStageProxy(this.world.centerX, 1345, this);
         
-        //PROXY BOTTOM LEFT
-        this.packetStream5= initPacketStream(440, 1140, 645, 1135, false, this);         
-        this.packetStream4 = initPacketStream(750, 1085, 850, 1100, false, this);    
-        setStageProxy(650, 970, this);
-
+        //IDS
+        this.packetStream5 = initPacketStream(610, 2065, 1000, 2065, false, this);      
+        setStageIDS(this.world.centerX, 2000, this.packetStream5, this);
         
         let guideTextArr = [
             "I am the Game Guide!",
@@ -53,7 +52,6 @@ Game.Stage_2.prototype = {
 
         addCollision(ACLSprite, this);
         addCollision(statefulFWSprite, this);
-        addCollision(statefulFWSprite2, this);
         addCollision(IDS, this);
         
         updateHelperSpritePos(this);
