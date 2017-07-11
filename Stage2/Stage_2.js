@@ -12,7 +12,7 @@ Game.Stage_2.prototype = {
         this.physics.startSystem(Phaser.Physics.ARCADE);
         addControls(this);
 
-        initMap('map', ['tileset1', 'tileset2'], this);
+        initMap('map', ['tileset1', 'tileset2', 'tileset3', 'tileset4', 'tileset5'], this);
         initDialogue(this);
         
         //ACL RROOM TOP LEFT

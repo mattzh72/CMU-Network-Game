@@ -121,7 +121,7 @@ function initDialogueControls(gameInstance) {
     //C is used to close dialogue box
     dialogueControls.close.onDown.add(closeDialogue, {
         gameInstance: gameInstance
-    })
+    });
 }
 
 /**

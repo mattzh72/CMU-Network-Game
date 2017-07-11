@@ -11,9 +11,11 @@ let connectionTable;
 let IDS;
 
 //Router Sprites
-let NAT;
 let routingTableSprite;
 let routingTable;
+
+//NAT Sprites
+let NAT;
 
 //Proxy Sprites
 let proxy;
@@ -76,12 +78,9 @@ function setStageIDS(centerX, centerY, packetStreamObj, gameInstance){
 
 
 function setStageRouter(centerX, centerY, gameInstance){
-    routingTable = addSprite(["Routing Table"], routingTableDialogue, 'routingTable', centerX - 50, centerY, 0.32, 0, true, gameInstance).instance; 
+    routingTable = addSprite(["Routing Table"], routingTableDialogue, 'routingTable', centerX, centerY, 0.32, 0, true, gameInstance).instance; 
     routingTable.events.onInputDown.add(toggleClicked, {sprite: routingTable}); 
 
-    
-    NAT = addSprite(["NAT"], NATDialogue, 'NAT', centerX + 40, centerY, PLATFORMER_SCALE, 200 , true, gameInstance).instance;
-    initPlatformerSprite(NAT, gameInstance);
 
     routingTableSprite = addSprite(["Routing Table"], routingTableSpriteDialogue, 'routingTableSprite', centerX - 40, centerY, PLATFORMER_SCALE, 200 , true, gameInstance).instance;
     initPlatformerSprite(routingTableSprite, gameInstance);
@@ -90,6 +89,11 @@ function setStageRouter(centerX, centerY, gameInstance){
 function setStageProxy(centerX, centerY, gameInstance){
     proxy = addSprite(["Proxy"], proxyDialogue, 'proxy', centerX, centerY + 140, 0.35, 0, true, gameInstance).instance; 
     proxy.events.onInputDown.add(toggleClicked, {sprite: proxy}); 
+}
+
+function setStageNAT(centerX, centerY, gameInstance){
+    NAT = addSprite(["NAT"], NATDialogue, 'NAT', centerX + 40, centerY, PLATFORMER_SCALE, 200 , true, gameInstance).instance;
+    initPlatformerSprite(NAT, gameInstance);
 }
 
 

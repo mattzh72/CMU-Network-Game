@@ -19,9 +19,10 @@ function initMap(mapName, tileSets, gameInstance){
         
     map = gameInstance.add.tilemap(mapName, tileWidth, tileHeight);
         
-    for (let i = 0; i < Math.min(mapData.layers.length, tileSets.length); i++){
+    for (let i = 0; i < Math.min(mapData.tilesets.length, tileSets.length); i++){
         map.addTilesetImage(mapData.tilesets[i].name, tileSets[i]);
     }
+    
     
     for (let i = 0; i < layers.length; i++ ){
         layers[i] = map.createLayer(mapData.layers[i].name);
