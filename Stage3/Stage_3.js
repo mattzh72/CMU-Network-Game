@@ -22,10 +22,10 @@ Game.Stage_3.prototype = {
         this.packetStream2 = initPacketStream(this.world.centerX + 160, 260, this.world.centerX + 560, 260, false, this);
 
         //Set up client sprite
-        let client = addSprite("Client", clientDialogue, 'computer', 100, 280, 0.5, 0, false, this).instance;
+        let client = addSprite("Client", clientDialogue, 'computer', 250, 330, 0.55, 0, false, this).instance;
 
         //Set up server sprite
-        let server = addSprite("Server", serverDialogue , 'server1', 2300, 280, 0.6, 0, false, this).instance; 
+        let server = addSprite("Server", serverDialogue , 'server1', 2300, 330, 0.6, 0, false, this).instance; 
 
 
 

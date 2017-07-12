@@ -22,6 +22,9 @@ let proxy;
 //The sprite the camera is focused on
 let FOCUSED_SPRITE = null;
 
+//packet streams
+let packetStreamArr = [];
+
 
 /**
  * Sets the room for an ACL by adding the appropriate sprites and initializing their movements.

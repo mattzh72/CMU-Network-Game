@@ -1,6 +1,5 @@
 Game.Stage_1 = function (game) {
     this.packetStream1 = {};
-    this.packetStream2 = {};
 
     this.textureArrServer = ['server1', 'server2', 'server3', 'server4'];
 };
@@ -11,16 +10,12 @@ Game.Stage_1.prototype = {
         this.physics.startSystem(Phaser.Physics.ARCADE);
         addControls(this);
 
-        initMap('map', ['tileset1', 'tileset2','tileset3'], this);
+        initMap('map', ['tileset1', 'tileset2'], this);
         initDialogue(this);
 
         //Set up Router Room
         setStageRouter(this.world.centerX, 900, this);
         this.packetStream1 = initPacketStream(610, 810, 1000, 810, true, this);
-        
-        //Set up NAT Room
-        setStageNAT(this.world.centerX, 1300, this);
-        this.packetStream2 = initPacketStream(610, 1355, 1000, 1355, true, this);
 
         //Set up client sprite
         let client = addSprite("Client", clientDialogue, 'computer', this.world.centerX, 400, 0.5, 0, true, this).instance;
@@ -28,7 +23,7 @@ Game.Stage_1.prototype = {
             sprite: client        });
 
         //Set up server sprite
-        let server = addSprite("Server", serverDialogue , 'server1', this.world.centerX, 1900, 0.5, 0, true, this).instance; 
+        let server = addSprite("Server", serverDialogue , 'server1', this.world.centerX, 1300, 0.5, 0, true, this).instance; 
         server.events.onInputDown.add(toggleClicked, {
             sprite: server,
         });
@@ -70,12 +65,9 @@ Game.Stage_1.prototype = {
         pollCameraControls(this);
         updateHelperSpritePos(this);
         
-        addCollision(NAT, this);
         addCollision(routingTableSprite, this);
 
         updatePacketPos(this.packetStream1, this);
-        updatePacketPos(this.packetStream2, this);
-
 
     },
 }

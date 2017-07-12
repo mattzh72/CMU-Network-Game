@@ -4,6 +4,7 @@ Game.Stage_2 = function(game){
     this.packetStream3 = {};
     this.packetStream4 = {}; 
     this.packetStream5 = {};
+    this.packetStream6 = {};
 };
 
 Game.Stage_2.prototype = {
@@ -12,7 +13,7 @@ Game.Stage_2.prototype = {
         this.physics.startSystem(Phaser.Physics.ARCADE);
         addControls(this);
 
-        initMap('map', ['tileset1', 'tileset2', 'tileset3', 'tileset4', 'tileset5'], this);
+        initMap('map', ['tileset1', 'tileset2', 'tileset3', 'tileset4', 'tileset5', 'tileset6'], this);
         initDialogue(this);
         
         //ACL  
@@ -32,6 +33,11 @@ Game.Stage_2.prototype = {
         this.packetStream5 = initPacketStream(610, 2065, 1000, 2065, false, this);      
         setStageIDS(this.world.centerX, 2000, this.packetStream5, this);
         
+        //NAT
+        this.packetStream6 = initPacketStream(610, 2440, 1000, 2440, false, this);      
+        setStageNAT(this.world.centerX, 2530, this);
+        
+        
         let guideTextArr = [
             "I am the Game Guide!",
             "Press C to Close",
@@ -47,12 +53,14 @@ Game.Stage_2.prototype = {
         updatePacketPos(this.packetStream3, this);
         updatePacketPos(this.packetStream4, this);
         updatePacketPos(this.packetStream5, this);
-
+        updatePacketPos(this.packetStream6, this);
 
 
         addCollision(ACLSprite, this);
         addCollision(statefulFWSprite, this);
         addCollision(IDS, this);
+        addCollision(NAT, this);
+
         
         updateHelperSpritePos(this);
 

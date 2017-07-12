@@ -12,6 +12,7 @@ Game.Preload_2.prototype = {
     this.load.image('tileset3','Stage2/Map/Rooms/pink_room.png');
     this.load.image('tileset4','Stage2/Map/Rooms/purple_room.png');
     this.load.image('tileset5','Stage2/Map/Rooms/sand_room.png');
+    this.load.image('tileset6','Stage2/Map/Rooms/yellow_room.png');  
     this.load.image('dialogue', 'Modules/Assets/dialogue.png');
    
     //ASSETS FOR ACL 
@@ -31,6 +32,10 @@ Game.Preload_2.prototype = {
         
     //ASSETS FOR PROXY
     this.load.image('proxy', 'Modules/Assets/proxy.png');
+        
+    //ASSETS FOR NAT
+    this.load.atlas('NAT', 'Modules/Assets/NAT.png', 'Modules/assets/NAT.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+
         
     //PRELOAD JSON MAP FILE
     readJSON('Stage2/Map/map_2.json');
