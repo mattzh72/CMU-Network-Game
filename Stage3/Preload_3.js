@@ -7,8 +7,10 @@ Game.Preload_3.prototype = {
     
     //ASSETS FOR MAP
     this.load.tilemap('map', 'Stage3/Map/map_3.json', null, Phaser.Tilemap.TILED_JSON);  
-    this.load.image('tileset1','Stage3/Map/room.png');
-    this.load.image('tileset2','Stage3/Map/pipe_opening.png');
+    this.load.image('tileset1','Stage3/Map/Rooms/blue_room.png');
+    this.load.image('tileset2','Stage3/Map/Rooms/yellow_room.png');
+    this.load.image('tileset3','Stage3/Map/pipe.png');
+    this.load.image('tileset4','Stage3/Map/opening.png');
     this.load.image('dialogue', 'Modules/Assets/dialogue.png');
         
     //ASSETS FOR CLIENT
@@ -17,10 +19,10 @@ Game.Preload_3.prototype = {
     this.load.image('laptop','Stage3/Map/laptop.png');
         
     //ASSETS FOR SERVER
-    this.load.image('server1','Stage3/Map/server_1.png');
-    this.load.image('server2','Stage3/Map/server_2.png');
-    this.load.image('server3','Stage3/Map/server_3.png');
-    this.load.image('server4','Stage3/Map/server_4.png');
+    this.load.image('server1','Stage3/Map/Servers/1.png');
+    this.load.image('server2','Stage3/Map/Servers/2.png');
+    this.load.image('server3','Stage3/Map/Servers/3.png');
+    this.load.image('server4','Stage3/Map/Servers/4.png');
         
     //ASSETS FOR ROUTER
     this.load.atlas('NAT', 'Modules/Assets/NAT.png', 'Modules/assets/NAT.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);

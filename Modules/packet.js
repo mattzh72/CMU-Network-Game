@@ -47,7 +47,7 @@ function initPacketStream(startX, startY, endX, endY, showDialogue, gameInstance
     let startPosArrs = calcStartPos(packetStreamData, gameInstance);
 
     for (let i = 0; i < startPosArrs.xPosArr.length; i++) {
-        let packet = addSprite(["Data Packet"], dialogue, 'packet', startPosArrs.xPosArr[i], startPosArrs.yPosArr[i], SCALE_FACTOR, 0, true, gameInstance);
+        let packet = addSprite(["Data Packet"], dialogue, 'packet', startPosArrs.xPosArr[i], startPosArrs.yPosArr[i], SCALE_FACTOR, 0, showDialogue, gameInstance);
         packetStreamData.packetArr.push(packet.instance);
     }
 
