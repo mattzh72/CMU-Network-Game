@@ -7,7 +7,7 @@ Game.Preload_0.prototype = {
     
     //ASSETS FOR MAP
     this.load.tilemap('map', 'Stage0/Map/map_0.json', null, Phaser.Tilemap.TILED_JSON);  
-    this.load.image('tileset1','Stage0/Map/Rooms/blue_room.png');
+    this.load.image('tileset1','Stage0/Map/background.png');
     this.load.image('dialogue', 'Modules/Assets/dialogue.png');
         
     //ASSETS FOR NETWORK DIAGRAMS
@@ -44,9 +44,6 @@ Game.Preload_0.prototype = {
         
     //ASSETS FOR HELPER SPRITE
     this.load.image('helperSprite', 'Graphics/alien-ufo-pack/PNG/shipGreen_manned.png');
-                
-    //ASSETS FOR HELPER SPRITE
-    this.load.image('helperSprite', 'Graphics/alien-ufo-pack/PNG/shipGreen_manned.png');
         
     //ASSETS FOR ITEMS
     this.load.image('packet', 'Modules/Assets/packet.png');
@@ -54,7 +51,6 @@ Game.Preload_0.prototype = {
     this.load.image('ACLScreen', 'Modules/Assets/ACL_screen.png');
         
     //ASSETS FOR PIPES
-    this.load.image('pipe_opening','Stage0/Map/pipe_opening.png');
     this.load.image('pipe','Stage0/Map/pipe.png');
 
     //READ JSON MAP FILE

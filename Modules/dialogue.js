@@ -144,9 +144,8 @@ function nextTxt() {
  * The text is displayed with a time delay for aesthetic purposes.
  */
 function openDialogue() {
-    textIndex = 0;
-    
     if (dialogueOpen === "false") {
+        textIndex = 0;
         dialogueOpen = "moving";
 
         //Load the text and the icon while the dialogue is moving. 
