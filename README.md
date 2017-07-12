@@ -4,9 +4,9 @@ A course that covers computer networking, network security, and network testing 
 | Topic                      | Learning Goals:                                                                       
 |----------------------------|---------------------
 | Parts of Network           | Learn about Routers, Clients, Servers, and Data Packets.                                                 
-| Security for Networks      | Learn about ACLs, IDS/IPS, Proxies, and Stateful Firewalls.
 |Simple Network Structures   |Learn how data moves through simple network structures, such as a simple client - router - server network. 
 | Complex Network Structures | Learn how data moves through more complex network topologies, specifically through a multi-root tree.      |
+| Security for Networks      | Learn about ACLs, IDS/IPS, Proxies, and Stateful Firewalls.
 | Networks with Basic Functions    | Learn how networks integrate basic security measures introduced earlier (ACLs).                                         |
 | Networks with Advanced Functions    | Learn how networks integrate advanced security measures introduced earlier (IDS/IPS, Proxies, Stateful Firewalls)                                         |
 | Policies                   | Learn about how stateless network policies work (basic ACL configurations).                               |
