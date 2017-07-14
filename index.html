@@ -26,6 +26,9 @@
     <script src = "Stage3/Preload_3.js"></script>
     <script src = "Stage3/Stage_3.js"></script>
     
+    <script src = "Stage4/Preload_4.js"></script>
+    <script src = "Stage4/Stage_4.js"></script>
+    
     <body>        
         <script type = "text/javascript">
             //Load in Source Sans Pro from Google Fonts
@@ -72,6 +75,9 @@
                 
                 game.state.add('Preload_3', Game.Preload_3);
                 game.state.add('Stage_3', Game.Stage_3);
+                
+                game.state.add('Preload_4', Game.Preload_4);
+                game.state.add('Stage_4', Game.Stage_4);
                 
                 game.state.start('Boot');       
             }

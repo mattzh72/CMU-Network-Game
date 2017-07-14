@@ -1,7 +1,23 @@
 const SCALE_FACTOR = 0.1;
-const STREAM_DENSITY_FACTOR = 2;
+let STREAM_DENSITY_FACTOR = 2;
 let PACKET_WIDTH;
 let PACKET_HEIGHT;
+
+let packetStreams = [];
+
+/**
+ * Initialize a two way packet stream.
+ * @param {number} startX       - The Y position of the start point
+ * @param {number} startY       - The Y position of the start point
+ * @param {number} endX         - The X position of the end point
+ * @param {number} endY         - The Y position of the end point
+ * @param {Boolean} showDialogue - Whether or not to show dialogue for the packet
+ * @param {object} gameInstance - A copy of the game variable
+ */
+function initTwoWayPacketStream(startX, startY, endX, endY, density, showDialogue, gameInstance){
+    initPacketStream(startX, startY, endX, endY, density, showDialogue, gameInstance);
+    initPacketStream(endX, endY, startX, startY, density, showDialogue, gameInstance);
+}
 
 /**
  * Initializes a packet stream.
@@ -16,7 +32,7 @@ let PACKET_HEIGHT;
  * @param {Boolean} showDialogue - Whether or not to show dialogue for the packet
  * @param {object} gameInstance - A copy of the game variable
  */
-function initPacketStream(startX, startY, endX, endY, showDialogue, gameInstance) {
+function initPacketStream(startX, startY, endX, endY, density, showDialogue, gameInstance) {
     //Sets and initializes variables
     let packetStreamData = {
         START_X : startX,
@@ -44,7 +60,7 @@ function initPacketStream(startX, startY, endX, endY, showDialogue, gameInstance
     }
 
     //Calls internal function calcStartPos() and stores it in an array
-    let startPosArrs = calcStartPos(packetStreamData, gameInstance);
+    let startPosArrs = calcStartPos(packetStreamData, density, gameInstance);
 
     for (let i = 0; i < startPosArrs.xPosArr.length; i++) {
         let packet = addSprite(["Data Packet"], dialogue, 'packet', startPosArrs.xPosArr[i], startPosArrs.yPosArr[i], SCALE_FACTOR, 0, showDialogue, gameInstance);
@@ -54,7 +70,19 @@ function initPacketStream(startX, startY, endX, endY, showDialogue, gameInstance
     for (let i = 0; i < packetStreamData.packetArr.length; i++)
         gameInstance.physics.arcade.moveToXY(packetStreamData.packetArr[i], packetStreamData.END_X, packetStreamData.END_Y, 50);
     
-    return packetStreamData;
+    packetStreams.push(packetStreamData);
+}
+
+/**
+ * Adds a packet with gravity to the game world.
+ * @param   {number} x            - The x position to initialize the packet
+ * @param   {number} y            - The y position to initialize the packet
+ * @param   {string} text         - The dialogue to be shown when packet is clicked on
+ * @param   {object} gameInstance - A copy of the game instance
+ * @returns {object} Returns addSprite
+ */
+function addPacket(x, y, text, gameInstance){
+    return addSprite(["Data Packet"], text, 'packet', x, y, SCALE_FACTOR, 100, true, gameInstance);
 }
 
 /**
@@ -66,7 +94,7 @@ function initPacketStream(startX, startY, endX, endY, showDialogue, gameInstance
  *                                  
  * @returns {Array} An array of the starting position points
  */
-function calcStartPos(packetStreamObj, gameInstance) {
+function calcStartPos(packetStreamObj, density, gameInstance) {
     //xDelta and yDelta are vector components of the packet path
     let xDelta = packetStreamObj.END_X - packetStreamObj.START_X;
     let yDelta = packetStreamObj.END_Y - packetStreamObj.START_Y;
@@ -85,9 +113,9 @@ function calcStartPos(packetStreamObj, gameInstance) {
 
     //Number of packets is decided by dividing the larger scalar value by the product of packet width and a constant 
     if (xDeltaAbs > yDeltaAbs) {
-        NUM_PCKTS = Math.floor(xDeltaAbs / (PACKET_WIDTH * STREAM_DENSITY_FACTOR));
+        NUM_PCKTS = Math.floor(xDeltaAbs / (PACKET_WIDTH * density));
     } else if (yDeltaAbs > xDeltaAbs) {
-        NUM_PCKTS = Math.floor(yDeltaAbs / (PACKET_HEIGHT * STREAM_DENSITY_FACTOR));
+        NUM_PCKTS = Math.floor(yDeltaAbs / (PACKET_HEIGHT * density));
     }
 
     //The spacing between the x coordinates of the packets 
@@ -125,23 +153,24 @@ function findYIntercept(x, y, slope) {
 
 /**
  * Sets the packets in motion and brings the packets back to the start of the stream once they've reached the end.
- * 
- * @param {object} gameInstance - A copy of the game variable
+ * * @param {object} gameInstance - A copy of the game variable
  */
-function updatePacketPos(packetStreamObj, gameInstance) {
-    for (let i = 0; i < packetStreamObj.packetArr.length; i++) {
-        let currentPacket = packetStreamObj.packetArr[i];
+function updatePacketPositions(gameInstance) {
+    for (let i = 0; i < packetStreams.length; i++) {
+        for (let c = 0; c < packetStreams[i].packetArr.length; c++){
+            let currentPacket = packetStreams[i].packetArr[c];
 
-        if ((packetStreamObj.START_X - packetStreamObj.END_X) < 0 && currentPacket.body.x > packetStreamObj.END_X) {
-            currentPacket.x = packetStreamObj.START_X;
-            currentPacket.y = packetStreamObj.START_Y;
-            gameInstance.physics.arcade.moveToXY(currentPacket, packetStreamObj.END_X, packetStreamObj.END_Y, 50);
-        }
+            if ((packetStreams[i].START_X - packetStreams[i].END_X) < 0 && currentPacket.body.x > packetStreams[i].END_X) {
+                currentPacket.x = packetStreams[i].START_X;
+                currentPacket.y = packetStreams[i].START_Y;
+                gameInstance.physics.arcade.moveToXY(currentPacket, packetStreams[i].END_X, packetStreams[i].END_Y, 50);
+            }
 
-        if ((packetStreamObj.START_X - packetStreamObj.END_X) > 0 && currentPacket.body.x < packetStreamObj.END_X) {
-            currentPacket.x = packetStreamObj.START_X;
-            currentPacket.y = packetStreamObj.START_Y;
-            gameInstance.physics.arcade.moveToXY(currentPacket, packetStreamObj.END_X, packetStreamObj.END_Y, 50);
+            if ((packetStreams[i].START_X - packetStreams[i].END_X) > 0 && currentPacket.body.x < packetStreams[i].END_X) {
+                currentPacket.x = packetStreams[i].START_X;
+                currentPacket.y = packetStreams[i].START_Y;
+                gameInstance.physics.arcade.moveToXY(currentPacket, packetStreams[i].END_X, packetStreams[i].END_Y, 50);
+            }
         }
     }
 }

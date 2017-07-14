@@ -48,5 +48,18 @@ let clientDialogue = [
 
 let proxyDialogue = [
     "I am a proxy."
-    
 ];
+
+let IDSDialogue = [
+    "I am an IDS."
+];
+
+let connectionTableDialogue = ["I am an connnection table."];
+
+let ACLScreenDialogue = ["I am an ACL."];
+    
+let ACLSpriteDialogue = ["I am a stateless firewall."];
+
+let statefulFWSpriteDialogue = ["I am Stateful."];
+    
+

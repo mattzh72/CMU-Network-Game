@@ -23,7 +23,6 @@ Game.Preload_1.prototype = {
     this.load.image('server4','Stage1/Map/Servers/4.png');
         
     //ASSETS FOR ROUTER
-    this.load.atlas('NAT', 'Modules/Assets/NAT.png', 'Modules/assets/NAT.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
     this.load.atlas('routingTableSprite', 'Modules/Assets/routing_table_sprite.png', 'Modules/assets/routing_table_sprite.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
     this.load.image('routingTable','Modules/Assets/routing_table.png');
 

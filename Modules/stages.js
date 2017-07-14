@@ -1,30 +1,5 @@
-//ACL Stage Sprites
-let ACLSprite;
-let ACLScreen;
-
-//Stateful Firewall Stage Sprites
-let statefulFWSprite;
-let connectionTable;
-
-//IDS/IPS Sprite
-let IDS;
-
-//Router Sprites
-let routingTableSprite;
-let routingTable;
-
-//NAT Sprites
-let NAT;
-
-//Proxy Sprites
-let proxy;
-
 //The sprite the camera is focused on
 let FOCUSED_SPRITE = null;
-
-//packet streams
-let packetStreamArr = [];
-
 
 /**
  * Sets the room for an ACL by adding the appropriate sprites and initializing their movements.
@@ -35,10 +10,12 @@ let packetStreamArr = [];
  * @param {object} gameInstance - A copy of the game variable
  */
 function setStageACL(centerX, centerY, gameInstance){
-    ACLScreen = addSprite(["Access Control List"], ["I am an ACL."], 'ACLScreen', centerX, centerY, 0.3, 0, true, gameInstance).instance;
+    let ACLScreen = addSprite(["Access Control List"], ACLScreenDialogue, 'ACLScreen', centerX, centerY, 0.3, 0, true, gameInstance).instance;
     
-    ACLSprite = addSprite(["Stateless Firewall"], ["I am a stateless firewall."], 'ACLSprite', centerX, centerY, PLATFORMER_SCALE, 200, true, gameInstance).instance;
+    let ACLSprite = addSprite(["Stateless Firewall"], ACLSpriteDialogue, 'ACLSprite', centerX, centerY, PLATFORMER_SCALE, 200, true, gameInstance).instance;
     initPlatformerSprite(ACLSprite, gameInstance);
+    
+    return ACLSprite;
 }
 
 
@@ -51,10 +28,12 @@ function setStageACL(centerX, centerY, gameInstance){
  * @param {object} gameInstance - A copy of the game variable
  */
 function setStageStatefulFW(centerX, centerY, gameInstance){
-    connectionTable = addSprite(["Connection Table"], ["I am an connnection table."], 'ConnectionTable', centerX, centerY + 20, 0.35, 0, true, gameInstance).instance;
+    let connectionTable = addSprite(["Connection Table"], connectionTableDialogue, 'ConnectionTable', centerX, centerY + 20, 0.35, 0, true, gameInstance).instance;
     
-    statefulFWSprite = addSprite(["Stateful Firewall"], ["I am Stateful."], 'StatefulFW', centerX, centerY, PLATFORMER_SCALE, 200, true, gameInstance).instance;    
+    let statefulFWSprite = addSprite(["Stateful Firewall"], statefulFWSpriteDialogue, 'StatefulFW', centerX, centerY, PLATFORMER_SCALE, 200, true, gameInstance).instance;    
     initPlatformerSprite(statefulFWSprite, gameInstance);
+    
+    return statefulFWSprite;
 }
 
 
@@ -66,31 +45,38 @@ function setStageStatefulFW(centerX, centerY, gameInstance){
  * @param {number} centerY      - The x position of the center of the room
  * @param {object} gameInstance - A copy of the game variable
  */
-function setStageIDS(centerX, centerY, packetStreamObj, gameInstance){
-    IDS = addSprite(["Intrusion Detection"], ["I am an IDS."], 'robot', centerX, centerY, 0.15, 0, true, gameInstance).instance;
-    IDS.events.onInputDown.add(toggleClicked, {sprite: IDS}); 
-    
-    gameInstance.time.events.loop(Phaser.Timer.SECOND * 1, toggleCameraFocus, {sprite: IDS, isPlatformerSprite: false, img: 'robot', altImg: 'robotBack', packetStreamObj: packetStreamObj, startX: centerX, startY: centerY,  gameInstance: gameInstance});   
+function setStageIDS(centerX, centerY, gameInstance){
+    let IDS = addSprite(["Intrusion Detection"], IDSDialogue, 'IPS', centerX, centerY, PLATFORMER_SCALE, 200, true, gameInstance).instance;
+    initPlatformerSprite(IDS, gameInstance);
+        
+    return IDS;
 }
 
 
 function setStageRouter(centerX, centerY, gameInstance){
-    routingTable = addSprite(["Routing Table"], routingTableDialogue, 'routingTable', centerX, centerY, 0.32, 0, true, gameInstance).instance; 
+    let routingTable = addSprite(["Routing Table"], routingTableDialogue, 'routingTable', centerX, centerY, 0.32, 0, true, gameInstance).instance; 
     routingTable.events.onInputDown.add(toggleClicked, {sprite: routingTable}); 
 
 
-    routingTableSprite = addSprite(["Routing Table"], routingTableSpriteDialogue, 'routingTableSprite', centerX - 40, centerY, PLATFORMER_SCALE, 200 , true, gameInstance).instance;
+    let routingTableSprite = addSprite(["Routing Table"], routingTableSpriteDialogue, 'routingTableSprite', centerX - 40, centerY, PLATFORMER_SCALE, 200 , true, gameInstance).instance;
     initPlatformerSprite(routingTableSprite, gameInstance);
+    
+    return {routingTableSprite: routingTableSprite, routingTable: routingTable};
 }
 
 function setStageProxy(centerX, centerY, gameInstance){
-    proxy = addSprite(["Proxy"], proxyDialogue, 'proxy', centerX, centerY + 140, 0.35, 0, true, gameInstance).instance; 
+    let proxy = addSprite(["Proxy"], proxyDialogue, 'proxy', centerX, centerY + 140, 0.35, 0, true, gameInstance).instance; 
     proxy.events.onInputDown.add(toggleClicked, {sprite: proxy}); 
+    return proxy;
 }
 
 function setStageNAT(centerX, centerY, gameInstance){
-    NAT = addSprite(["NAT"], NATDialogue, 'NAT', centerX + 40, centerY, PLATFORMER_SCALE, 200 , true, gameInstance).instance;
+    let NAT = addSprite(["NAT"], NATDialogue, 'NAT', centerX + 40, centerY, PLATFORMER_SCALE, 200 , true, gameInstance).instance;
     initPlatformerSprite(NAT, gameInstance);
+    
+    let NATScreen = addSprite("","", 'NATScreen', centerX, centerY, 0.5, 0, false, gameInstance);
+    
+    return NAT;
 }
 
 

@@ -9,7 +9,7 @@ let modules = [
     "packet.js",
     "stages.js",
     "guide.js",
-    "lessons.js",
+    "dialogues.js",
 ];
 
 for (let i = 0; i < modules.length; i++){

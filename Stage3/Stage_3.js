@@ -1,7 +1,8 @@
 Game.Stage_3 = function (game) {
-    this.packetStream1 = {};
-    this.packetStream2 = {};
-
+    this.IPS;
+    this.StatefulFW;
+    this.routerSprite1;
+    this.routerSprite2;
 };
 
 Game.Stage_3.prototype = {
@@ -10,52 +11,49 @@ Game.Stage_3.prototype = {
         this.physics.startSystem(Phaser.Physics.ARCADE);
         addControls(this);
 
-        initMap('map', ['tileset1', 'tileset2','tileset3', 'tileset4'], this);
+        initMap('map', ['tileset1', 'tileset2', 'tileset3', 'tileset4', 'tileset5', 'tileset6', 'tileset7', 'tileset8', ], this);
         initDialogue(this);
 
-        //Set up Router Room
-        setStageRouter(this.world.centerX - 400, 350, this);
-        this.packetStream1 = initPacketStream(this.world.centerX - 610, 260, this.world.centerX - 210, 260, false, this);
+        //Set up Router Rooms
+        this.routerSprite1 = setStageRouter(940, 1000, this).routingTableSprite;
+        initTwoWayPacketStream(720, 930, 1130, 1040, STREAM_DENSITY_FACTOR, false, this);
+        initTwoWayPacketStream(720, 1070, 1130, 1040, STREAM_DENSITY_FACTOR, false, this);
+
+        this.routerSprite2 = setStageRouter(940, 1570, this).routingTableSprite;
+        initTwoWayPacketStream(720, 1490, 1130, 1620, STREAM_DENSITY_FACTOR, false, this);
+        initTwoWayPacketStream(720, 1630, 1130, 1620, STREAM_DENSITY_FACTOR, false, this);
         
-        //Set up NAT Room
-        setStageNAT(this.world.centerX + 400, 350, this);
-        this.packetStream2 = initPacketStream(this.world.centerX + 160, 260, this.world.centerX + 560, 260, false, this);
+        //Set up Stateful FW
+        initTwoWayPacketStream(1370, 1040, 1500, 1040, STREAM_DENSITY_FACTOR, false, this);
+        this.StatefulFW = setStageStatefulFW(1580, 1000, this);
+        
+        
+        //Set up IPS
+        this.IPS = setStageIDS(1580, 1570, this);
+        initTwoWayPacketStream(1370, 1630, 1700, 1630, STREAM_DENSITY_FACTOR, false, this);
 
-        //Set up client sprite
-        let client = addSprite("Client", clientDialogue, 'computer', 250, 330, 0.55, 0, false, this).instance;
-
-        //Set up server sprite
-        let server = addSprite("Server", serverDialogue , 'server1', 2300, 330, 0.6, 0, false, this).instance; 
-
-
-
+        
         //set up guide sprite
-        let guideTextArr = [
-//            "Hey there! I am your game guide through this course. I will show you around and give you tips on how to play! Don't worry about losing me - I'll be always hovering near your mouse. Now press the right arrow key to see what I have to say next.",
-//            "This level is to teach you the basic components of every network: a client, a router, and a server. You probably heard about these before! They're pretty common.",
-//            "A CLIENT is usually used by a person to perform some kind of action, like checking your email. This action sends network traffic asking a SERVER to help with the action - and the ROUTER helps direct that traffic in the right direction.", 
-//            "But don't let me tell you about it - after I'm done talking, you should click around and see what you can find!",
-//            "Oh and by the way, if you forgot what I said before, you can always press the left arrow key to go back to my previous tips.",
-            "Press C to Close",
-        ];
-        let guideSpriteData = initGuideSprite(guideTextArr, this);
-        this.time.events.add(1000, openDialogue, {
-            spriteData: guideSpriteData,
-            gameInstance: this
-        });
+        let guideSpriteData = initGuideSprite(this.guideTextArr, this);
+//        this.time.events.add(1000, openDialogue, {
+//            spriteData: guideSpriteData,
+//            gameInstance: this
+//        });
     },
 
     update: function () {
         updateDialoguePos(this);
         pollCameraControls(this);
-        updateHelperSpritePos(this);
         
-        addCollision(NAT, this);
-        addCollision(routingTableSprite, this);
-
-        updatePacketPos(this.packetStream1, this);
-        updatePacketPos(this.packetStream2, this);
-
+        updatePacketPositions(this);
+        
+        //Add collisions for sprites
+        addCollision(this.routerSprite1, this);
+        addCollision(this.routerSprite2, this);
+        addCollision(this.IPS, this);
+        addCollision(this.StatefulFW, this);
+        
+        updateHelperSpritePos(this);
 
     },
 }
