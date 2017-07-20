@@ -1,88 +1,189 @@
 <!DOCTYPE html>
 
 <html>
-    <meta charset="utf-8">
-    <title>CMU Game</title>
-    
+<meta charset="utf-8">
+<title>CMU Game</title>
+
 <!--    libraries and custom scripts-->
-    <script src = "phaser.js"></script>
-    <script src = "Modules/loader.js"></script>
-    <script src = "Boot.js"></script>
-    <script src = "SaveCPU.js"></script>
-    
+<link rel="stylesheet" href="Libraries/jquery-ui-1.12.1.custom/jquery-ui.min.css">
+<script src="Libraries/jquery-3.2.1.min.js"></script>
+<script src="Libraries/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+
+<script src="Libraries/phaser.js"></script>
+<script src="Modules/loader.js"></script>
+<script src="Puzzle/puzzle_loader.js"></script>
+<script src="Boot.js"></script>
+<script src="Libraries/SaveCPU.js"></script>
+
 <!--    Preloaders and Stages-->
-    <script src = "Stage0/Preload_0.js"></script>
-    <script src = "Stage0/Stage_0.js"></script>
-    
-    <script src = "Testing/PreloadTest.js"></script>
-    <script src = "Testing/TestLevel.js"></script>
-    
-    <script src = "Stage1/Preload_1.js"></script>
-    <script src = "Stage1/Stage_1.js"></script>
-    
-    <script src = "Stage2/Preload_2.js"></script>
-    <script src = "Stage2/Stage_2.js"></script>
-    
-    <script src = "Stage3/Preload_3.js"></script>
-    <script src = "Stage3/Stage_3.js"></script>
-    
-    <script src = "Stage4/Preload_4.js"></script>
-    <script src = "Stage4/Stage_4.js"></script>
-    
-    <body>        
-        <script type = "text/javascript">
-            //Load in Source Sans Pro from Google Fonts
-            var WebFontConfig = {
-                google: { families: [ 'Source+Sans+Pro::latin' ] }
-              };
-              (function() {
-                    var wf = document.createElement('script');
-                    wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-                    wf.type = 'text/javascript';
-                    wf.async = 'true';
-                    var s = document.getElementsByTagName('script')[0];
-                    s.parentNode.insertBefore(wf, s);
-              })();
-            
-            //Load game configurations
-            //Scale mode is set to RESIZE so game will automatically reload/resize when game width changes
-            window.onload = function(){
-                var config = {
-                    width: window.innerWidth,
-                    height: window.innerHeight,
-                    renderer: Phaser.AUTO,
-                    antialias: true,
-                    multiTexture: true,
-                    scaleMode: Phaser.ScaleManager.RESIZE,
-                }
+<script src="Course/Stage0/Preload_0.js"></script>
+<script src="Course/Stage0/Stage_0.js"></script>
 
-                var game = new Phaser.Game(config);
-                
-                game.state.add('Boot', Game.Boot);
+<script src="Course/Stage1/Preload_1.js"></script>
+<script src="Course/Stage1/Stage_1.js"></script>
 
-                game.state.add('PreloadTest', Game.PreloadTest);
-                game.state.add('TestLevel', Game.TestLevel);
-                
-                
-                game.state.add('Preload_0', Game.Preload_0);
-                game.state.add('Stage_0', Game.Stage_0);
-                
-                game.state.add('Preload_1', Game.Preload_1);
-                game.state.add('Stage_1', Game.Stage_1);
-                
-                game.state.add('Preload_2', Game.Preload_2);
-                game.state.add('Stage_2', Game.Stage_2);
-                
-                game.state.add('Preload_3', Game.Preload_3);
-                game.state.add('Stage_3', Game.Stage_3);
-                
-                game.state.add('Preload_4', Game.Preload_4);
-                game.state.add('Stage_4', Game.Stage_4);
-                
-                game.state.start('Boot');       
-            }
-        </script>
-        
-    </body>
+<script src="Course/Stage2/Preload_2.js"></script>
+<script src="Course/Stage2/Stage_2.js"></script>
+
+<script src="Course/Stage3/Preload_3.js"></script>
+<script src="Course/Stage3/Stage_3.js"></script>
+
+<script src="Course/Stage4/Preload_4.js"></script>
+<script src="Course/Stage4/Stage_4.js"></script>
+
+<script src="Course/Stage5/Preload_5.js"></script>
+<script src="Course/Stage5/Stage_5.js"></script>
+
+<!--    Puzzle Code-->
+<script src="Puzzle/StagePuzzle/Preload_Puzzle.js"></script>
+<script src="Puzzle/StagePuzzle/Stage_Puzzle.js"></script>
+
+<!--Load in the game-->
+<script type="text/javascript">
+    //Load in Source Sans Pro from Google Fonts
+    var WebFontConfig = {
+        google: {
+            families: ['Source+Sans+Pro::latin']
+        }
+    };
+    (function() {
+        var wf = document.createElement('script');
+        wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+        wf.type = 'text/javascript';
+        wf.async = 'true';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(wf, s);
+    })();
+
+    //Load game configurations
+    //Scale mode is set to RESIZE so game will automatically reload/resize when game width changes
+    window.onload = function() {
+        var config = {
+            width: window.innerWidth,
+            height: window.innerHeight,
+            renderer: Phaser.AUTO,
+            antialias: true,
+            multiTexture: true,
+            scaleMode: Phaser.ScaleManager.RESIZE,
+        }
+
+        var game = new Phaser.Game(config);
+
+        game.state.add('Boot', Game.Boot);
+
+        game.state.add('PreloadTest', Game.PreloadTest);
+        game.state.add('TestLevel', Game.TestLevel);
+
+        game.state.add('Preload_0', Game.Preload_0);
+        game.state.add('Stage_0', Game.Stage_0);
+
+        game.state.add('Preload_1', Game.Preload_1);
+        game.state.add('Stage_1', Game.Stage_1);
+
+        game.state.add('Preload_2', Game.Preload_2);
+        game.state.add('Stage_2', Game.Stage_2);
+
+        game.state.add('Preload_3', Game.Preload_3);
+        game.state.add('Stage_3', Game.Stage_3);
+
+        game.state.add('Preload_4', Game.Preload_4);
+        game.state.add('Stage_4', Game.Stage_4);
+
+        game.state.add('Preload_5', Game.Preload_5);
+        game.state.add('Stage_5', Game.Stage_5);
+
+        game.state.add('Preload_Puzzle', Game.Preload_Puzzle);
+        game.state.add('Stage_Puzzle', Game.Stage_Puzzle);
+
+        game.state.start('Boot');
+    }
+
+</script>
+
+<!--Styling for the Puzzle Popups-->
+<style>
+    label,
+    input {
+        display: block;
+    }
+    
+    input.text {
+        margin-bottom: 12px;
+        width: 95%;
+        padding: .4em;
+    }
+    
+    fieldset {
+        padding: 0;
+        border: 0;
+        margin-top: 25px;
+    }
+    
+    h1 {
+        font-size: 1.2em;
+        margin: .6em 0;
+    }
+    
+    table {
+        margin: 1em 0;
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    table td,
+    table th {
+        border: 1px solid #dddddd;
+        padding: .6em 10px;
+        text-align: left;
+    }
+    
+    table tr:nth-child(even) {
+        background-color: #eee;
+    }
+    
+    table tr:nth-child(odd) {
+        background-color: #fff;
+    }
+    
+    .ui-dialog .ui-state-error {
+        padding: .3em;
+    }
+    
+    .validateTips {
+        border: 1px solid transparent;
+        padding: 0.3em;
+    }
+
+</style>
+
+<body>
+    <div id="function-dialog" title="" style="display: none;">
+        <button id="button-add">Add a Configuration</button>
+        <div id="accordion"></div>
+    </div>
+
+    <div id="config-dialog" title="Create new user" style="display:none">
+        <p class="validateTips">All form fields are required.</p>
+        <form>
+            <fieldset>
+                <label id="source-label" for="Source">Source</label>
+                <input type="text" name="Source" id="Source" class="text ui-widget-content ui-corner-all">
+                <label id="destination-label" for="Destination">Destination</label>
+                <input type="text" name="Destination" id="Destination" class="text ui-widget-content ui-corner-all">
+                <label id="content-label" for="Content">Content</label>
+                <input type="text" name="Content" id="Content" class="text ui-widget-content ui-corner-all">
+                <label id="state-label" for="State">State</label>
+                <input type="text" name="State" id="State" class="text ui-widget-content ui-corner-all">
+                <hr>
+                <label id="action-label" for="Action">Action</label>
+                <input type="text" name="Action" id="Action" class="text ui-widget-content ui-corner-all">
+
+                <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+            </fieldset>
+        </form>
+    </div>
+
+</body>
 
 </html>

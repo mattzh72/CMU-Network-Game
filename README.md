@@ -6,11 +6,11 @@ A course that covers computer networking, network security, and network testing 
 | Parts of Network           | Learn about Routers, Clients, Servers, and Data Packets.                                                 
 |Simple Network Structures   |Learn how data moves through simple network structures, such as a simple client - router - server network. 
 | Complex Network Structures | Learn how data moves through more complex network topologies, specifically through a multi-root tree.      |
-| Security for Networks      | Learn about ACLs, IDS/IPS, Proxies, and Stateful Firewalls.
+| Security for Networks      | Learn about ACLs, IPS, Proxies, and Stateful Firewalls.
 | Networks with Basic Functions    | Learn how networks integrate basic security measures introduced earlier (ACLs).                                         |
-| Networks with Advanced Functions    | Learn how networks integrate advanced security measures introduced earlier (IDS/IPS, Proxies, Stateful Firewalls)                                         |
+| Networks with Advanced Functions    | Learn how networks integrate advanced security measures introduced earlier (IPS/IPS, Proxies, Stateful Firewalls)                                         |
 | Policies                   | Learn about how stateless network policies work (basic ACL configurations).                               |
-| Advanced Policies          | Learn how stateful network policies work (IDS configuration).                                              |
+| Advanced Policies          | Learn how stateful network policies work (IPS configuration).                                              |
 | Buzz Algorithm             | Learn about the [Buzz algorithm](https://users.ece.cmu.edu/~vsekar/papers/nsdi16_buzz.pdf) and why it is ground-breaking for verifying policies in a stateful network. |
 
 > A stateless function is defined as a network function that does not retain information about the connection. Stateful functions, in comparison, actively track information about the connection, for example, tracking SYN, SYN-ACK, ACK packets in a TCP connection.
@@ -174,7 +174,7 @@ The **Testing** folder contains scripts used primarily to test new modules in th
 
 # How can I start developing?
 ### Documentation:
-Take a good look at the documentation for for the files in **Modules**. It handles all the heavy lifting developers need to program their game, from reading in map files and initializing the game world to even predefined rooms for common computer network components, including the *router, ACL, Stateful Firewalls, IDS/IPS,* and *proxies*.
+Take a good look at the documentation for for the files in **Modules**. It handles all the heavy lifting developers need to program their game, from reading in map files and initializing the game world to even predefined rooms for common computer network components, including the *router, ACL, Stateful Firewalls, IPS/IPS,* and *proxies*.
 
 ### Making New Stages:
 When making new lessons/stages, put all of the files in a organized manner into a singular folder, named StageN, with N being the next highest integer  number available.  For example, if the latest stage addition is numbered "5", number the new stage folder "6". The folder contents should be organized in the same way as the other **Stage** folders, with a **Map** folder containing game assets, a **Preload.js** file with the `preload` function, and a **StageN.js** (N being an integer) for the `create` and `update` functions. For further details, look over the existing folders for examples.

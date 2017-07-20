@@ -6,53 +6,23 @@ let PLATFORMER_SPEED = 60;
 /**
  * Switches the camera to follow the most recently clicked sprite
  */
-function toggleCameraFocus(){
+function toggleCameraFocus() {
     if (dialogueOpen == "false") {
         this.gameInstance.camera.unfollow(FOCUSED_SPRITE);
-            if (this.isPlatformerSprite === true){
-                movePlatformerSprite(this.sprite);
-            }
-            else {
+        if (this.isPlatformerSprite === true) {
+            movePlatformerSprite(this.sprite);
+        } else {
             moveFlyingSprite(this.sprite, this.img, this.altImg, this.packetStreamObj.packetArr, this.startX, this.startY, this.gameInstance);
         }
-    } 
-    else if (dialogueOpen == "true") {
+    } else if (dialogueOpen == "true") {
         this.gameInstance.camera.follow(FOCUSED_SPRITE, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
         this.sprite.body.velocity.x = 0;
         this.sprite.body.velocity.y = 0;
-        
+
         if (this.isPlatformerSprite === true)
             this.sprite.animations.play('idle');
-    }   
-}
-
-
-/**
- * A movement pattern for any flying sprites (sprites without gravity)
- * 
- * @param {object}   sprite          - The sprite to move
- * @param {string} img               - The key of an front-facing image of the sprite cached in the game state
- * @param {string} altImg            - The key of an back-facing image of the sprite cached in the game state
- * @param {Array} packetStreamArr - An array of packets in a moving stream
- * @param {number} startX          - The starting x coordinate of the sprite
- * @param {number} startY          - The starting y coordinate of the sprite
- * @param {object}   gameInstance    - A copy of the game variable
- */
-function moveFlyingSprite(sprite, img, altImg, packetStreamArr, startX, startY, gameInstance){
-    let movement = getRandomInt(0, 2);
-    let packetIndex = getRandomInt(0, packetStreamArr.length - 1);
-        
-    if (movement == 0) {
-        sprite.loadTexture(img);
-        gameInstance.physics.arcade.moveToXY(sprite, startX, startY, 100);
-
-    } 
-    else {
-        sprite.loadTexture(altImg);
-        gameInstance.physics.arcade.moveToObject(sprite, packetStreamArr[packetIndex], 100);
     }
 }
-
 
 /**
  * This is attached to a custom game loop in security.js for the platformer security sprites (sprites with gravity)
@@ -119,8 +89,8 @@ function addSprite(title, txt, image, posX, posY, scale, gravity, inputBool, gam
     gameInstance.physics.arcade.enable(sprite);
     sprite.body.gravity.y = gravity;
     sprite.body.collideWorldBounds = true;
-    
-    if (inputBool === true){
+
+    if (inputBool === true) {
         sprite.inputEnabled = inputBool;
         sprite.input.priorityID = 1;
         sprite.input.useHandCursor = true;
@@ -149,10 +119,13 @@ function addSprite(title, txt, image, posX, posY, scale, gravity, inputBool, gam
 /**
  * Tweens the scale of a sprite upwads to a programatically defined scale.
  */
-function tweenScale(){
-    if (this.sprite.scale.x < 0 && this.xScale > 0){
+function tweenScale() {
+    if (this.sprite.scale.x < 0 && this.xScale > 0) {
         this.xScale = this.xScale * -1;
     }
-    
-    this.gameInstance.add.tween(this.sprite.scale).to({x: this.xScale, y: this.yScale}, 200, Phaser.Easing.Linear.In, true); 
+
+    this.gameInstance.add.tween(this.sprite.scale).to({
+        x: this.xScale,
+        y: this.yScale
+    }, 200, Phaser.Easing.Linear.In, true);
 }

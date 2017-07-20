@@ -50,8 +50,8 @@ let proxyDialogue = [
     "I am a proxy."
 ];
 
-let IDSDialogue = [
-    "I am an IDS."
+let IPSDialogue = [
+    "I am an IPS."
 ];
 
 let connectionTableDialogue = ["I am an connnection table."];

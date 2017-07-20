@@ -1,18 +1,29 @@
 let controls;
+let CAMERA_SPEED = 20;
 
 /**
  * Initalizes the control object
  * 
  * @param {object} gameInstance - A copy of the game variable
  */
-function addControls(gameInstance){
+function addControls(gameInstance) {
     controls = {
         right: gameInstance.input.keyboard.addKey(Phaser.Keyboard.D),
         left: gameInstance.input.keyboard.addKey(Phaser.Keyboard.A),
         up: gameInstance.input.keyboard.addKey(Phaser.Keyboard.W),
-        down: gameInstance.input.keyboard.addKey(Phaser.Keyboard.S),          
+        down: gameInstance.input.keyboard.addKey(Phaser.Keyboard.S),
+        shift: gameInstance.input.keyboard.addKey(Phaser.Keyboard.SHIFT),
     };
 }
+
+function removeControls(gameInstance) {
+    gameInstance.input.keyboard.removeKey(Phaser.Keyboard.D);
+    gameInstance.input.keyboard.removeKey(Phaser.Keyboard.A);
+    gameInstance.input.keyboard.removeKey(Phaser.Keyboard.W);
+    gameInstance.input.keyboard.removeKey(Phaser.Keyboard.S);
+}
+
+
 
 /**
  * Adds functionality to the controls defined earlier.
@@ -23,26 +34,20 @@ function addControls(gameInstance){
  * 
  * @param {object} gameInstance - A copy of the game variable
  */
-function pollCameraControls(gameInstance){
-    if (gameInstance.input.activePointer.isDown){
-         gameInstance.physics.arcade.isPaused=false; //when player clicks on screen after resizing, game continues
-    }
-    
-    if (controls.up.isDown)
-    {
-        gameInstance.camera.y -= 4;
-    }
-    else if (controls.down.isDown)
-    {
-        gameInstance.camera.y += 4;
+function pollCameraControls(gameInstance) {
+    if (gameInstance.input.activePointer.isDown) {
+        gameInstance.physics.arcade.isPaused = false; //when player clicks on screen after resizing, game continues
     }
 
-    if (controls.left.isDown)
-    {
-        gameInstance.camera.x -= 4;
+    if (controls.up.isDown) {
+        gameInstance.camera.y -= CAMERA_SPEED;
+    } else if (controls.down.isDown) {
+        gameInstance.camera.y += CAMERA_SPEED;
     }
-    else if (controls.right.isDown)
-    {
-        gameInstance.camera.x += 4;
-    }    
+
+    if (controls.left.isDown) {
+        gameInstance.camera.x -= CAMERA_SPEED;
+    } else if (controls.right.isDown) {
+        gameInstance.camera.x += CAMERA_SPEED;
+    }
 }

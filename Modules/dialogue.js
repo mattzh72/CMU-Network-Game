@@ -152,7 +152,7 @@ function openDialogue() {
         //This disables the user's ability to change the content of the dialogue when it is still open.
         let Y_POS_OFFSET = this.gameInstance.camera.y + window.innerHeight - PADDING_BOTTOM;
         let spriteData = this.spriteData;
-
+        
         //Load the sprite's image
         icon.loadTexture(spriteData.img);
 
