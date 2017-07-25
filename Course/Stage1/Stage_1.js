@@ -4,7 +4,6 @@ Game.Stage_1 = function (game) {
 };
 
 Game.Stage_1.prototype = {
-
     create: function () {
         this.physics.startSystem(Phaser.Physics.ARCADE);
         addControls(this);

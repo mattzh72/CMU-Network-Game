@@ -4,49 +4,51 @@ let content = $("#Content");
 let state = $("#State");
 let action = $("#Action");
 let allFieldsObjects = [source, destination, content, state, action];
-let allFieldsHTML = $( [] ).add( source ).add( destination ).add( content ).add( state ).add( action );
+let allFieldsHTML = $([]).add(source).add(destination).add(content).add(state).add(action);
+let actions = [];
 
 function openModal() {
     if (controls.shift.isDown) {
-        removeControls(this.gameInstance);
+        actions = this.nf.availableActions;
 
-        $("#function-dialog").prop('title', this.networkFunc.type + " Configuation Tool");
-        displayConfigs(this.networkFunc);
+        this.displayInformation(this.nf);
+        displayConfigs(this.nf, this.accordion); //initialize configuration tab
 
-        initElements(this.networkFunc, this.gameInstance);
+        $("label").tooltip();
+        $(this.tabs).tabs();
+        initDialog(this.nf, this.div, this.gameInstance);
+        initButtons(this.nf, this.accordion, this.button, this.gameInstance);
 
-        $("#function-dialog").dialog("open");
+        $(this.div).dialog("open");
     }
 }
 
-function initElements(networkFunc, gameInstance) {
-    initDialog(gameInstance); //put this first for to allow html button tags to be generated
-    initButtons(networkFunc);
-}
-
-function initButtons(networkFunc) {
-    $("#button-add").button({
+function initButtons(nf, accordion, button, gameInstance) {
+    $(button).button({
         icon: "ui-icon-plus",
     });
-    $("#button-add").click({
-        networkFunc: networkFunc
+    $(button).click({
+        nf: nf,
+        accordion: accordion,
+        gameInstance: gameInstance,
     }, addNewConfig);
 
-    for (let i = 0; i < networkFunc.configs.length; i++) {
-        let ID = networkFunc.configs[i].ID;
+    for (let i = 0; i < nf.configs.length; i++) {
+        let ID = nf.configs[i].ID;
         let buttonID = "#button-delete-config-" + ID;
         $(buttonID).button({
             icon: "ui-icon-cancel",
         });
         $(buttonID).click({
-            networkFunc: networkFunc,
+            nf: nf,
             ID: ID,
+            accordion: accordion,
         }, deleteConfig);
     }
 }
 
-function initDialog(gameInstance) {
-    $("#function-dialog").dialog({
+function initDialog(nf, div, gameInstance) {
+    $(div).dialog({
         autoOpen: false,
         show: {
             effect: "blind",
@@ -58,14 +60,15 @@ function initDialog(gameInstance) {
         },
         height: 400,
         width: 500,
+        title: nf.type + " No. " + nf.ID + " Tool Box",
         close: function () {
             addControls(gameInstance);
         }
     });
 }
 
-function initAccordion(networkFunc) {
-    $("#accordion")
+function initAccordion(nf, accordion) {
+    $(accordion)
         .accordion({
             header: "> div > h3",
             heightStyle: "content",
@@ -79,33 +82,34 @@ function initAccordion(networkFunc) {
                 $(this).accordion("refresh");
             },
             update: function (event, ui) {
-                var order = $("#accordion").sortable('toArray');
+                var order = $(accordion).sortable('toArray');
                 let newConfigs = [];
 
                 for (let i = 0; i < order.length; i++) {
                     let ID = Number.parseInt(order[i]);
-                    let config = networkFunc.getConfigByID(ID);
+                    let config = nf.getConfigByID(ID);
                     newConfigs.push(config);
                 }
-                networkFunc.configs = newConfigs;
+                nf.configs = newConfigs;
             }
         });
 }
 
-function displayConfigs(networkFunc) {
-    initAccordion(networkFunc);
+function displayConfigs(nf, accordion) {
+    initAccordion(nf, accordion);
 
-    let configArr = networkFunc.configs;
-    $(".group").remove();
+    let configArr = nf.configs;
+    $(".group-" + accordion.substr(1)).remove();
     for (let i = 0; i < configArr.length; i++) {
-        addConfigEntry(configArr[i]);
+        addConfigEntry(configArr[i], accordion);
     }
-    $("#accordion").accordion("refresh");
+    $(accordion).accordion("refresh");
 }
 
-function addConfigEntry(config) {
-    section = '<div class="group" id = "' + (config.ID);
-    section += '"><h3> Configuration ' + (config.ID + 1) + '</h3><div><table style="width:100%; border: 1px solid grey;">';
+function addConfigEntry(config, accordion) {
+    section = '<div class="group-' + accordion.substr(1);
+    section += '"id = "' + (config.ID);
+    section += '"><h3> Rule ' + (config.ID + 1) + '</h3><div><table>';
 
     section += "<tr>";
     section += "<th>";
@@ -129,27 +133,14 @@ function addConfigEntry(config) {
         }
     }
     section += "</table><button id = 'button-delete-config-" + config.ID;
-    section += "' style='margin-top: 40px;'>Delete this Configuration</button></div></div>";
+    section += "' style='margin-top: 40px;'>Delete this Rule</button></div></div>";
 
-    $("#accordion").append(section);
-}
-
-function reorderConfigs(event) {
-    var order = $("#accordion").sortable('toArray');
-    let newConfigs = [];
-
-    for (let i = 0; i < order.length; i++) {
-        let ID = Number.parseInt(order[i]);
-        let config = event.data.networkFunc.getConfigByID(ID);
-        newConfigs.push(config);
-    }
-    event.data.networkFunc.configs = newConfigs;
+    $(accordion).append(section);
 }
 
 function addNewConfig(event) {
-    let type = event.data.networkFunc.type;
+    let type = event.data.nf.type;
     let newConfig;
-    removeUnrelatedFields(type);
 
     let dialog = $("#config-dialog").dialog({
         autoOpen: false,
@@ -161,14 +152,15 @@ function addNewConfig(event) {
             effect: "blind",
             duration: 1000
         },
+        title: "Add a New Rule",
         height: 600,
         width: 400,
         buttons: {
             "Create new configuration": function () {
-                newConfig = addNewConfigByType(type, event.data.networkFunc);
+                newConfig = addNewConfigByType(event.data.nf);
                 if (newConfig) {
-                    addConfigEntry(newConfig);
-                    $("#accordion").accordion("refresh");
+                    addConfigEntry(newConfig, event.data.accordion);
+                    $(event.data.accordion).accordion("refresh");
 
                     let ID = newConfig.ID;
                     let buttonID = "#button-delete-config-" + ID;
@@ -176,7 +168,7 @@ function addNewConfig(event) {
                         icon: "ui-icon-cancel",
                     });
                     $(buttonID).click({
-                        networkFunc: event.data.networkFunc,
+                        nf: event.data.nf,
                         ID: ID,
                     }, deleteConfig);
                     dialog.dialog("close");
@@ -188,43 +180,56 @@ function addNewConfig(event) {
             },
         },
         close: function () {
-            for (let i = 0; i < allFieldsObjects.length; i++){
+            for (let i = 0; i < allFieldsObjects.length; i++) {
                 allFieldsObjects[i].val("");
             }
-            
-            allFieldsHTML.removeClass( "ui-state-error" );
+
+            allFieldsHTML.removeClass("ui-state-error");
         }
     });
     $("#config-dialog").dialog("open");
+    enableByNames(["State", "Content", "Destination", "Source"]);
+    removeUnrelatedFields(event.data.nf.disabledConfigs);
+    removeControls(event.data.gameInstance);
+    $("#Action").autocomplete({
+        source: actions,
+        minLength: 0,
+    });
+    $("#Action").bind('focus', function(){ $(this).autocomplete("search"); } );
+
 }
 
-function addNewConfigByType(type, networkFunc) {
+function addNewConfigByType(nf) {
     let config = null;
-    
-    if (checkCompleteness([source, destination, content, state, action])) {
-        if (type == "ACL") {
-            config = networkFunc.addRule(source.val(), action.val());
-        }
-    }
+    let actionVal = action.val().charAt(0).toUpperCase() + action.val().slice(1);
 
+    if (checkCompleteness([source, destination, content, state, action])) {
+        config = nf.addRule(source.val(), destination.val(), content.val(), state.val(), actionVal);
+    }
 
     return config;
 }
 
-function removeUnrelatedFields(type) {
-    if (type == "ACL") {
-        $("#Destination").prop('disabled', true);
-        $("#Destination").prop('value', "*");
-        $("#Destination").css('opacity', 0.5);
-        $("#destination-label").css('opacity', 0.5);
-        $("#Content").prop('disabled', true);
-        $("#Content").prop('value', "*");
-        $("#Content").css('opacity', 0.5);
-        $("#content-label").css('opacity', 0.5);
-        $("#State").prop('disabled', true);
-        $("#State").prop('value', "*");
-        $("#State").css('opacity', 0.5);
-        $("#state-label").css('opacity', 0.5);
+function removeUnrelatedFields(unrelatedFields) {
+    for (let i = 0; i < unrelatedFields.length; i++) {
+        removeByName(unrelatedFields[i]);
+    }
+}
+
+function removeByName(name) {
+    $("#" + name).prop('disabled', true);
+    $("#" + name).prop('value', "*");
+    $("#" + name).css('opacity', 0.5);
+    $("#" + name.charAt(0).toLowerCase() + name.slice(1)).css('opacity', 0.5);
+}
+
+function enableByNames(names) {
+    for (let i = 0; i < names.length; i++) {
+        let name = names[i];
+        $("#" + name).prop('disabled', false);
+        $("#" + name).prop('value', "");
+        $("#" + name).css('opacity', 1);
+        $("#" + name.charAt(0).toLowerCase() + name.slice(1)).css('opacity', 1);
     }
 }
 
@@ -242,6 +247,19 @@ function checkCompleteness(fields) {
             updateTips("Input cannot be solely comprised of spaces.");
             return false;
         }
+
+        if (field[0].id === "Action") {
+            let fieldVal = field.val();
+
+            if (fieldVal.lastIndexOf(" ") > 0)
+                fieldVal = field.val().substr(0, field.val().lastIndexOf(" "));
+
+            if (!actions.includes(fieldVal.charAt(0).toUpperCase() + fieldVal.slice(1))) {
+                field.addClass("ui-state-error");
+                updateTips("Invalid action for this network component.");
+                return false;
+            }
+        }
     }
 
     return true;
@@ -258,7 +276,7 @@ function updateTips(t) {
 }
 
 function deleteConfig(event) {
-    event.data.networkFunc.deleteRule(event.data.ID);
+    event.data.nf.deleteRule(event.data.ID);
     $("#" + event.data.ID).remove();
-    $("#accordion").accordion("refresh");
+    $(event.data.accordion).accordion("refresh");
 }

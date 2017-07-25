@@ -8,12 +8,12 @@
 <link rel="stylesheet" href="Libraries/jquery-ui-1.12.1.custom/jquery-ui.min.css">
 <script src="Libraries/jquery-3.2.1.min.js"></script>
 <script src="Libraries/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
-
 <script src="Libraries/phaser.js"></script>
 <script src="Modules/loader.js"></script>
-<script src="Puzzle/puzzle_loader.js"></script>
+<script src="Puzzle/Puzzle%20Modules/puzzle_loader.js"></script>
 <script src="Boot.js"></script>
 <script src="Libraries/SaveCPU.js"></script>
+<script src="Libraries/Phasetips.js"></script>
 
 <!--    Preloaders and Stages-->
 <script src="Course/Stage0/Preload_0.js"></script>
@@ -102,6 +102,9 @@
 
 <!--Styling for the Puzzle Popups-->
 <style>
+    body {
+        background-color: #2b1c3b;
+    }
     label,
     input {
         display: block;
@@ -132,17 +135,17 @@
     
     table td,
     table th {
-        border: 1px solid #dddddd;
+        border: 1px solid white;
         padding: .6em 10px;
         text-align: left;
     }
     
     table tr:nth-child(even) {
-        background-color: #eee;
+        background-color: #C9B4C0;
     }
     
     table tr:nth-child(odd) {
-        background-color: #fff;
+        background-color: #F3CBD1;
     }
     
     .ui-dialog .ui-state-error {
@@ -153,35 +156,78 @@
         border: 1px solid transparent;
         padding: 0.3em;
     }
+    
+    ::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: #9d8693;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: #F3CBD1;
+    }
 
 </style>
 
 <body>
+
     <div id="function-dialog" title="" style="display: none;">
-        <button id="button-add">Add a Configuration</button>
-        <div id="accordion"></div>
+        <div id="function-tabs">
+            <ul>
+                <li><a href="#function-tabs-1">Details</a></li>
+                <li><a href="#function-tabs-2">Configuration</a></li>
+            </ul>
+            <div id="function-tabs-1">
+            </div>
+            <div id="function-tabs-2">
+                <button id="function-button-add">Configure</button>
+                <div id="function-accordion"></div>
+            </div>
+        </div>
     </div>
 
     <div id="config-dialog" title="Create new user" style="display:none">
-        <p class="validateTips">All form fields are required.</p>
+        <p class="validateTips" style ="font-size: 13px;">All form fields are required. If a field is disabled, that means you cannot use it for this type of network function. The * means that that the packet will not be evaluated by that field. For example, an * in the content field means that the action will apply to packets with any type of content.</p>
+        <p style ="font-size: 13px;">Hover over the labels for more information.</p>
+        <hr>
         <form>
             <fieldset>
-                <label id="source-label" for="Source">Source</label>
+                <label id="source-label" title="The router number that the packet is coming from." for="Source">Source</label>
                 <input type="text" name="Source" id="Source" class="text ui-widget-content ui-corner-all">
-                <label id="destination-label" for="Destination">Destination</label>
+                <label id="destination-label" title="The router number that the packet is heading towards." for="Destination">Destination</label>
                 <input type="text" name="Destination" id="Destination" class="text ui-widget-content ui-corner-all">
-                <label id="content-label" for="Content">Content</label>
+                <label id="content-label" title="What's inside of the packet?" for="Content">Content</label>
                 <input type="text" name="Content" id="Content" class="text ui-widget-content ui-corner-all">
-                <label id="state-label" for="State">State</label>
+                <label id="state-label" title="The state of the connection." for="State">State</label>
                 <input type="text" name="State" id="State" class="text ui-widget-content ui-corner-all">
                 <hr>
-                <label id="action-label" for="Action">Action</label>
+                <label id="action-label" title="The action to take if the data packet satisfies the above conditions." for="Action">Action</label>
                 <input type="text" name="Action" id="Action" class="text ui-widget-content ui-corner-all">
+
 
                 <!-- Allow form submission with keyboard without duplicating the dialog button -->
                 <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+
             </fieldset>
         </form>
+    </div>
+
+    <div id="router-dialog" title="" style="display: none;">
+        <div id="router-tabs">
+            <ul>
+                <li><a href="#router-tabs-1">Routing Table</a></li>
+                <li><a href="#router-tabs-2">Configuration</a></li>
+            </ul>
+            <div id="router-tabs-1">
+            </div>
+            <div id="router-tabs-2">
+                <button id="router-button-add">Configure</button>
+                <div id="router-accordion"></div>
+            </div>
+        </div>
     </div>
 
 </body>
