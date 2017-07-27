@@ -105,6 +105,7 @@
     body {
         background-color: #2b1c3b;
     }
+    
     label,
     input {
         display: block;
@@ -157,16 +158,16 @@
         padding: 0.3em;
     }
     
-    ::-webkit-scrollbar {
+     ::-webkit-scrollbar {
         width: 5px;
         height: 5px;
     }
     
-    ::-webkit-scrollbar-track {
+     ::-webkit-scrollbar-track {
         background: #9d8693;
     }
     
-    ::-webkit-scrollbar-thumb {
+     ::-webkit-scrollbar-thumb {
         background: #F3CBD1;
     }
 
@@ -181,6 +182,7 @@
                 <li><a href="#function-tabs-2">Configuration</a></li>
             </ul>
             <div id="function-tabs-1">
+                <button id="function-button-delete">Remove Network Function</button>
             </div>
             <div id="function-tabs-2">
                 <button id="function-button-add">Configure</button>
@@ -189,28 +191,16 @@
         </div>
     </div>
 
-    <div id="config-dialog" title="Create new user" style="display:none">
-        <p class="validateTips" style ="font-size: 13px;">All form fields are required. If a field is disabled, that means you cannot use it for this type of network function. The * means that that the packet will not be evaluated by that field. For example, an * in the content field means that the action will apply to packets with any type of content.</p>
-        <p style ="font-size: 13px;">Hover over the labels for more information.</p>
+    <div id="config-dialog" title="Create new Rule" style="display:none">
+        <p class="validateTips" style="font-size: 15px;">All form fields are required. If a field is disabled, that means you cannot use it for this type of network function. The * means that that the packet will not be evaluated by that field. For example, an * in the content field means that the action will apply to packets with any type of content.</p>
+        <p style="font-size: 15px;">Hover over the labels for more information.</p>
         <hr>
-        <form>
-            <fieldset>
-                <label id="source-label" title="The router number that the packet is coming from." for="Source">Source</label>
-                <input type="text" name="Source" id="Source" class="text ui-widget-content ui-corner-all">
-                <label id="destination-label" title="The router number that the packet is heading towards." for="Destination">Destination</label>
-                <input type="text" name="Destination" id="Destination" class="text ui-widget-content ui-corner-all">
-                <label id="content-label" title="What's inside of the packet?" for="Content">Content</label>
-                <input type="text" name="Content" id="Content" class="text ui-widget-content ui-corner-all">
-                <label id="state-label" title="The state of the connection." for="State">State</label>
-                <input type="text" name="State" id="State" class="text ui-widget-content ui-corner-all">
-                <hr>
-                <label id="action-label" title="The action to take if the data packet satisfies the above conditions." for="Action">Action</label>
-                <input type="text" name="Action" id="Action" class="text ui-widget-content ui-corner-all">
+        <form id="new-config-form">
+            <fieldset id="new-config-fieldset">
 
 
                 <!-- Allow form submission with keyboard without duplicating the dialog button -->
                 <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-
             </fieldset>
         </form>
     </div>
@@ -228,6 +218,31 @@
                 <div id="router-accordion"></div>
             </div>
         </div>
+    </div>
+
+    <div id="packet-dialog" title="Deploy A Test Packet" style="display:none">
+        <p class="validateTips" style="font-size: 15px;">Not all fields are required except for Source and Destination. If a field is left blank, the packet will be initialized with nothing in the field.</p>
+        <p style="font-size: 15px;">Hover over the labels for more information.</p>
+        <hr>
+        <form id="new-packet-form">
+            <fieldset id="new-packet-fieldset">
+                <label id="packet-source-label" title="The starting source of the packet. This is where the packet will enter the network." for="packet-source">Source</label>
+                <input type="text" name="packet-source" id="packet-source" class="text ui-widget-content ui-corner-all">
+                <label id="packet-destination-label" title="The destination of the packet. This is where the packet will exit the network." for="packet-destination">Destination</label>
+                <input type="text" name="packet-destination" id="packet-destination" class="text ui-widget-content ui-corner-all">
+                <label id="packet-tags-label" title="Any tags to tag the packet with. If more than one tag, split the tags with a comma ONLY." for="packet-tags">Tag</label>
+                <input type="text" name="packet-tags" id="packet-tags" class="text ui-widget-content ui-corner-all">
+                <label id="packet-content-label" title="The content of the packet. Type anything you want here." for="packet-content">Content</label>
+                <input type="text" name="packet-content" id="packet-content" class="text ui-widget-content ui-corner-all">
+                <button id="packet-button-deploy">Deploy Test Packet</button>
+                <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+            </fieldset>
+        </form>
+    </div>
+
+    <div id="packet-results-dialog" title="" style="display: none;">
+        <p style="font-size: 13px;">Results of the test packet.</p>
     </div>
 
 </body>

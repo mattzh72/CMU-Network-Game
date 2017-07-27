@@ -4,7 +4,7 @@ function StatefulFW(network, gameInstance) {
     this.network = network;
     this.gameInstance = gameInstance;
     this.connectedNode = null;
-    this.edge = new edge(this.network.edges.length, this, this.network.nodes[0], gameInstance);
+    this.edge = new edge(this.network, this, this.network.nodes[0], gameInstance);
     this.availableActions = [
         "Drop",
         "Allow",
@@ -19,7 +19,7 @@ function StatefulFW(network, gameInstance) {
     this.initializeSprite(gameInstance);
 
     //Call parent constructor
-    nf.call(this, this.network);
+    nf.call(this, this.network, this.type);
 }
 
 StatefulFW.prototype = Object.create(nf.prototype);

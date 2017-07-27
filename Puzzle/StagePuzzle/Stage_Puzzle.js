@@ -9,11 +9,13 @@ Game.Stage_Puzzle.prototype = {
         this.physics.startSystem(Phaser.Physics.ARCADE);
         addControls(this);
 
-        testModel(this);  
+        testModel(this); 
+        initPanels(networkTest, this);
     },
 
     update: function () {
         pollCameraControls(this);
+        updatePanelPositions();
         
 //        for (let i = 0; i < networkTest.nodes.length; i++)
 //            networkTest.nodes[i].updateEdge();

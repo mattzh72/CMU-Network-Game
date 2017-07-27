@@ -1,39 +1,36 @@
 function router(ID, x, y, gameInstance) {
-    let scale = PUZZLE_SCALE;
-
     this.type = "Router";
-    this.sprite = addSprite("Router", "Router", 'router', x, y, scale, 0, false, gameInstance).instance;
+    this.sprite = gameInstance.add.sprite(x, y, 'router');
     this.routingTable = [];
     this.clients = [];
     this.edges = [];
+    this.attachedFunctions = [];
     this.configs = [];
-    this.availableActions = [
-        "Forward to",
-    ];
-    this.disabledConfigs = [
-        "Content",
-        "State",
+    this.fields = [
+        {
+            name: "Source",
+            title: "The router number that the packet is coming from."
+        },
+        {
+            name: "Destination",
+            title: "The router number that the packet is heading towards."
+        },
+        {
+            name: "Tag",
+            title: "The value that the packet has been tagged with."
+        },
+        {
+            name: "Forward",
+            title: "Where do forward this packet to. If blank, the packet will be dropped.",
+        },
+        {
+            name: "Alert",
+            title: "Optional field. This can be used to alert the network operator.",
+        },
     ];
     this.tooltip;
 
-    this.sprite.events.onInputOver.add(this.onHover, {
-        sprite: this.sprite,
-        ID: ID,
-        xScale: scale + 0.05,
-        yScale: scale + 0.05,
-        gameInstance: gameInstance,
-        router: this,
-    });
-
-    this.sprite.events.onInputOut.add(this.stopHover, {
-        sprite: this.sprite,
-        xScale: scale,
-        yScale: scale,
-        gameInstance: gameInstance,
-        router: this,
-    });
-
-    this.initializeSprite(gameInstance);
+    this.initializeSprite(this.sprite, ID, gameInstance);
 
     node.call(this, ID, "Router");
 }
@@ -41,18 +38,8 @@ function router(ID, x, y, gameInstance) {
 router.prototype = Object.create(node.prototype);
 router.prototype.constructor = router;
 
-router.prototype.addRule = function (src, dst, action) {
-    let config = {
-        ID: this.configs.length,
-        Source: src,
-        Destination: dst,
-        Content: "*",
-        State: "*",
-        Action: action,
-    };
-
+router.prototype.addRule = function (config) {
     this.configs.push(config);
-    return config;
 };
 
 router.prototype.deleteRule = function (ID) {
@@ -72,6 +59,11 @@ router.prototype.reportRules = function () {
     return this.configs;
 };
 
+router.prototype.addClient = function (c, e) {
+    this.clients.push(c);
+    this.edges.push(e);
+}
+
 router.prototype.initTable = function (paths) {
     for (let i = 0; i < paths.length; i++) {
         let path = paths[i];
@@ -84,11 +76,11 @@ router.prototype.initTable = function (paths) {
         }
 
         let entry = {
-            destination: path[path.length -1],
+            destination: path[path.length - 1],
             nextHop: nextNode,
             cost: path.length - 1,
         };
-        
+
         this.routingTable.push(entry);
     }
 }
@@ -102,19 +94,14 @@ router.prototype.outputEdges = function () {
 router.prototype.onDrag = function () {
     for (let i = 0; i < this.edges.length; i++) {
         let edge = this.edges[i];
-        let otherNode = null;
-
-        if (edge.node1.equals(this)) {
-            otherNode = edge.node2;
-        } else if (edge.node2.equals(this)) {
-            otherNode = edge.node1;
-        }
+        let otherNode = edge.getOtherNode(this);
 
         if (otherNode) {
             edge.eraseEdge();
         }
     }
 }
+
 
 router.prototype.onDropped = function () {
     for (let i = 0; i < this.edges.length; i++) {
@@ -132,6 +119,7 @@ router.prototype.onDropped = function () {
             edge.drawEdge();
         }
     }
+    this.sprite.bringToTop();
 }
 
 router.prototype.removeEdge = function (edge) {
@@ -141,7 +129,20 @@ router.prototype.removeEdge = function (edge) {
     }
 }
 
-router.prototype.initializeSprite = function (gameInstance) {
+router.prototype.initializeSprite = function (sprite, ID, gameInstance) {
+    this.sprite.anchor.setTo(0.5, 0.5);
+    this.sprite.scale.setTo(PUZZLE_SCALE, PUZZLE_SCALE);
+    this.sprite.events.onInputOver.add(this.onHover, {
+        ID: ID,
+        gameInstance: gameInstance,
+        router: this,
+    });
+
+    this.sprite.events.onInputOut.add(this.stopHover, {
+        gameInstance: gameInstance,
+        router: this,
+    });
+
     this.sprite.inputEnabled = true;
     this.sprite.input.enableDrag(true);
     this.sprite.events.onInputDown.add(openModal, {
@@ -157,25 +158,46 @@ router.prototype.initializeSprite = function (gameInstance) {
     this.sprite.events.onDragStop.add(this.onDropped, this);
 }
 
+router.prototype.onHover = function () {
+    this.router.initToolTip(this.ID, this.router.sprite, this.gameInstance);
+    this.router.tooltip.simulateOnHoverOver();
+
+    let styles = [
+
+    [10, 0xF3CBD1, 0.1],
+    [8, 0xF3CBD1, 0.15],
+    [4, 0xF3CBD1, 0.4],
+    [3, 0xF3CBD1, 0.5],
+    [2, 0xF3CBD1, 1],
+    ];
+
+    for (let i = 0; i < this.router.edges.length; i++) {
+        let edge = this.router.edges[i];
+        edge.eraseEdge();
+        edge.drawEdge(styles);
+    }
+
+    //scaling
+    this.gameInstance.add.tween(this.router.sprite.scale).to({
+        x: PUZZLE_SCALE + 0.05,
+        y: PUZZLE_SCALE + 0.05,
+    }, 200, Phaser.Easing.Linear.In, true);
+}
+
 router.prototype.stopHover = function () {
     this.router.tooltip.simulateOnHoverOut();
     setTimeout(this.router.tooltip.destroy, 200);
 
-    //scaling
-    this.gameInstance.add.tween(this.sprite.scale).to({
-        x: this.xScale,
-        y: this.yScale
-    }, 200, Phaser.Easing.Linear.In, true);
-}
-
-router.prototype.onHover = function () {
-    this.router.initToolTip(this.ID, this.sprite, this.gameInstance);
-    this.router.tooltip.simulateOnHoverOver();
+    for (let i = 0; i < this.router.edges.length; i++) {
+        let edge = this.router.edges[i];
+        edge.eraseEdge();
+        edge.drawEdge();
+    }
 
     //scaling
-    this.gameInstance.add.tween(this.sprite.scale).to({
-        x: this.xScale,
-        y: this.yScale
+    this.gameInstance.add.tween(this.router.sprite.scale).to({
+        x: PUZZLE_SCALE,
+        y: PUZZLE_SCALE,
     }, 200, Phaser.Easing.Linear.In, true);
 }
 
@@ -189,7 +211,7 @@ router.prototype.initToolTip = function (ID, sprite, gameInstance) {
         boundsAlignV: "middle",
         align: "center",
     };
-    let text = gameInstance.add.text(0, 0, "Router " + ID + ".\nClick to view Routing Table.", style);
+    let text = gameInstance.add.text(0, 0, "Router No." + ID + ".\nHold SHIFT and click to configure..", style);
     text.setTextBounds(0, 0, 200, 50);
 
     this.tooltip = new Phasetips(gameInstance.game, {
@@ -198,4 +220,32 @@ router.prototype.initToolTip = function (ID, sprite, gameInstance) {
         customBackground: gameInstance.add.sprite(0, 0, "tooltip"),
         padding: 50,
     });
+}
+
+router.prototype.getConfigByID = function (ID) {
+    for (let i = 0; i < this.configs.length; i++) {
+        if (this.configs[i].ID == ID) {
+            return this.configs[i];
+        }
+    }
+};
+
+router.prototype.addNF = function(nf){
+    this.attachedFunctions.push(nf);
+}
+
+router.prototype.findNF = function(type, ID){
+    for (let i = 0; i < this.attachedFunctions; i++){
+        if (this.attachedFunctions[i].type == type && this.attachedFunctions[i].type == ID){
+            return this.attachedFunctions[i];
+        }
+    }
+}
+
+router.prototype.removeNF = function(nf){
+    for (let i = 0; i < this.attachedFunctions; i++){
+        if (this.attachedFunctions[i].equals(nf)){
+            this.attachedFunctions.splice(i, 1);
+        }
+    }
 }

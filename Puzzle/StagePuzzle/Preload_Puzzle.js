@@ -12,6 +12,8 @@ Game.Preload_Puzzle.prototype = {
         
         //Tooltip Assets
         this.load.image('tooltip','Puzzle/Assets/tooltip.png');
+        this.load.image('side_panel', 'Puzzle/Assets/side_square_panel.png');
+        this.load.image('packet', 'Puzzle/Assets/packet.png');
         
         
 },

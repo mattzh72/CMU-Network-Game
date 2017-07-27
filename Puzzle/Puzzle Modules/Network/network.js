@@ -24,11 +24,11 @@ function network(ID, gameInstance) {
 }
 
 network.prototype.calculatePaths = function () {
-    for (let i = 0; i < this.nodes.length; i++){
+    for (let i = 0; i < this.nodes.length; i++) {
         let paths = [];
-        for (let j = 0; j < this.nodes.length; j++){
+        for (let j = 0; j < this.nodes.length; j++) {
             let path = bfs(this.matrix, this.nodes[i].ID, this.nodes[j].ID);
-            for (let k = 0; k < path.length; k++){
+            for (let k = 0; k < path.length; k++) {
                 path[k] = this.nodes[path[k]].type + " " + path[k];
             }
             paths.push(path);
@@ -52,15 +52,15 @@ network.prototype.addNode = function (node) {
     this.nodes.push(node);
 }
 
-network.prototype.removeNode = function (node) {
-    for (let i = 0; i < this.nodes.length; i++) {
-        if (node.equals(this.nodes[i])) {
-            this.nodes.splice(i, 1);
+network.prototype.removeNF = function (nf) {
+    for (let i = 0; i < this.nfs.length; i++) {
+        if (nf.equals(this.nfs[i])) {
+            this.nfs.splice(i, 1);
         }
     }
 
-    for (let i = 0; i < this.nodes.length; i++) {
-        this.nodes[i].ID = i;
+    for (let i = 0; i < this.nfs.length; i++) {
+        this.nfs[i].ID = i;
     }
 }
 
@@ -93,22 +93,37 @@ network.prototype.outputEdges = function () {
     }
 }
 
-network.prototype.populateRouters = function(gameInstance){
-    for (let i = 0; i < this.nodes.length; i++){
-        if (this.nodes[i].type === "Router"){
-            for (let j = 0; j < getRandomInt(1, 2); j++){
+network.prototype.populateRouters = function (gameInstance) {
+    for (let i = 0; i < this.nodes.length; i++) {
+        if (this.nodes[i].type === "Router") {
+            for (let j = 0; j < getRandomInt(1, 2); j++) {
                 let x_pos = this.nodes[i].sprite.x + getRandomInt(-100, 100);
                 let y_pos = this.nodes[i].sprite.y + getRandomInt(-100, 100);
-                                
-                let c = new client(this.nodes.length, x_pos , y_pos , gameInstance);
-                let e = new edge(this.edges.length, this.nodes[i], c, gameInstance);
-                e.drawEdge();
-                this.nodes[i].edges.push(e);
-                this.nodes[i].clients.push(c);
+
+                let c = new client(this.nodes.length, x_pos, y_pos, gameInstance);
+                let e = new edge(this, this.nodes[i], c, gameInstance);
                 c.edge = e;
-                this.addEdge(e);
+                this.nodes[i].addClient(c, e);
                 this.addNode(c);
             }
         }
     }
+}
+
+network.prototype.findNode = function(type, ID){
+    if (type === "Router" || type === "Client"){
+        for (let i = 0; i < this.nodes.length; i++){
+            if (this.nodes[i].type == type && this.nodes[i].ID == ID){
+                return this.nodes[i];
+            }
+        }
+    } else {
+         for (let i = 0; i < this.nfs.length; i++){
+            if (this.nfs[i].type == type && this.nfs[i].ID == ID){
+                return this.nfs[i];
+            }
+        }       
+    }
+    
+    return null;
 }

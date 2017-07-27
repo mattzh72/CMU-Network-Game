@@ -1,8 +1,30 @@
 function nf(nw, type) {
     this.configs = [];
-    nw.nfs.push(this);
-    
+    this.fields = [
+        {
+            name: "Source",
+            title: "The router number that the packet is coming from."
+        },
+        {
+            name: "Destination",
+            title: "The router number that the packet is heading towards."
+        },
+        {
+            name: "Content",
+            title: "What's inside of the packet?"
+        },
+        {
+            name: "State",
+            title: "The state of the connection."
+        },
+        {
+            name: "Tag",
+            title: "The value of which to tag the data packet with if it matches the above fields."
+        },
+    ];
+
     node.call(this, nw.nfs.length, type);
+    nw.nfs.push(this);
 }
 
 nf.prototype = Object.create(node.prototype);
@@ -16,18 +38,8 @@ nf.prototype.getConfigByID = function (ID) {
     }
 };
 
-nf.prototype.addConfig = function (src, dst, cont, state, action) {
-    let config = {
-        ID: this.configs.length,
-        Source: src,
-        Destination: dst,
-        Content: cont,
-        State: state,
-        Action: action,
-    };
-
+nf.prototype.addConfig = function (config) {
     this.configs.push(config);
-    return config;
 };
 
 nf.prototype.removeConfig = function (ID) {
@@ -46,4 +58,3 @@ nf.prototype.reportConfigs = function () {
 
     return this.configs;
 };
-

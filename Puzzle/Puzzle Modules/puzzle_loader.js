@@ -13,9 +13,14 @@ let puzzle_modules = [
     "Functions/IPS.js",
     "Functions/StatefulFW.js",
     "network_tester.js",
-    "Modals/modal.js",
+    "Modals/tool_modal.js",
+    "Modals/config_modal.js",
     "Modals/function_modal.js",
     "Modals/router_modal.js",
+    "Modals/packet_modal.js",
+    "UI/UI.js",
+    "Packet/packet.js",
+    "Packet/test_packet.js",
 ];
 
 for (let i = 0; i < puzzle_modules.length; i++) {

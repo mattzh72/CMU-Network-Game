@@ -1,31 +1,12 @@
 function client(ID, x, y, gameInstance) {
-    let scale = CLIENT_SCALE;
-    this.IPAddress = getRandomInt(0, 255) + "." + getRandomInt(0, 255) + "." + getRandomInt(0, 255) + "." + getRandomInt(0, 255);
     let edge;
 
 
     this.type = "Client";
-    this.sprite = addSprite("client", "client", 'client', x, y, scale, 0, false, gameInstance).instance;
+    this.sprite = gameInstance.add.sprite(x, y, 'client');
     this.tooltip;
 
-    this.sprite.events.onInputOver.add(this.onHover, {
-        sprite: this.sprite,
-        ID: ID,
-        xScale: scale + 0.05,
-        yScale: scale + 0.05,
-        gameInstance: gameInstance,
-        client: this,
-    });
-
-    this.sprite.events.onInputOut.add(this.stopHover, {
-        sprite: this.sprite,
-        xScale: scale,
-        yScale: scale,
-        gameInstance: gameInstance,
-        client: this,
-    });
-
-    this.initializeSprite(gameInstance);
+    this.initializeSprite(ID, gameInstance);
 
     node.call(this, ID, "Client", gameInstance);
 }
@@ -33,32 +14,59 @@ function client(ID, x, y, gameInstance) {
 client.prototype = Object.create(node.prototype);
 client.prototype.constructor = client;
 
-client.prototype.initializeSprite = function (gameInstance) {
+client.prototype.initializeSprite = function (ID, gameInstance) {
+    this.sprite.anchor.setTo(0.5, 0.5);
+    this.sprite.scale.setTo(CLIENT_SCALE, CLIENT_SCALE);
     this.sprite.inputEnabled = true;
     this.sprite.input.enableDrag(true);
     this.sprite.events.onDragStart.add(this.updateEdge, this);
     this.sprite.events.onDragStop.add(this.updateEdge, this);
+    this.sprite.events.onInputOver.add(this.onHover, {
+        ID: ID,
+        gameInstance: gameInstance,
+        client: this,
+    });
+
+    this.sprite.events.onInputOut.add(this.stopHover, {
+        gameInstance: gameInstance,
+        client: this,
+    });
 }
 
 client.prototype.stopHover = function () {
     this.client.tooltip.simulateOnHoverOut();
     setTimeout(this.client.tooltip.destroy, 200);
 
+    this.client.edge.eraseEdge();
+    this.client.edge.drawEdge();
+    
     //scaling
-    this.gameInstance.add.tween(this.sprite.scale).to({
-        x: this.xScale,
-        y: this.yScale
+    this.gameInstance.add.tween(this.client.sprite.scale).to({
+        x: CLIENT_SCALE,
+        y: CLIENT_SCALE,
     }, 200, Phaser.Easing.Linear.In, true);
 }
 
 client.prototype.onHover = function () {
-    this.client.initToolTip(this.ID, this.sprite, this.gameInstance);
+    this.client.initToolTip(this.ID, this.client.sprite, this.gameInstance);
     this.client.tooltip.simulateOnHoverOver();
 
+    let styles = [
+    [10, 0xF3CBD1, 0.1],
+    [8, 0xF3CBD1, 0.15],
+    [4, 0xF3CBD1, 0.4],
+    [3, 0xF3CBD1, 0.5],
+    [2, 0xF3CBD1, 1],
+    ];
+
+    this.client.edge.eraseEdge();
+    this.client.edge.drawEdge(styles);
+    
+    
     //scaling
-    this.gameInstance.add.tween(this.sprite.scale).to({
-        x: this.xScale,
-        y: this.yScale
+    this.gameInstance.add.tween(this.client.sprite.scale).to({
+        x: CLIENT_SCALE + 0.05,
+        y: CLIENT_SCALE + 0.05,
     }, 200, Phaser.Easing.Linear.In, true);
 }
 
@@ -72,7 +80,7 @@ client.prototype.initToolTip = function (ID, sprite, gameInstance) {
         boundsAlignV: "middle",
         align: "center",
     };
-    let text = gameInstance.add.text(0, 0, "Client No." + ID +" with IP Address " + this.IPAddress, style);
+    let text = gameInstance.add.text(0, 0, "Client No." + ID, style);
     text.setTextBounds(0, 0, 200, 50);
 
     this.tooltip = new Phasetips(gameInstance.game, {
