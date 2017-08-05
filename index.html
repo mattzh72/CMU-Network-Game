@@ -142,11 +142,11 @@
     }
     
     table tr:nth-child(even) {
-        background-color: #C9B4C0;
+        background-color: rgb(157, 134, 147);
     }
     
     table tr:nth-child(odd) {
-        background-color: #F3CBD1;
+        background-color: rgb(185, 156, 172);
     }
     
     .ui-dialog .ui-state-error {
@@ -156,6 +156,12 @@
     .validateTips {
         border: 1px solid transparent;
         padding: 0.3em;
+    }
+    
+    .ui-autocomplete {
+        max-height: 75px;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
     
      ::-webkit-scrollbar {
@@ -239,6 +245,30 @@
                 <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
             </fieldset>
         </form>
+    </div>
+
+    <div id="game-options-dialog" title="Game Options" style="display:none">
+        <div id="game-options-tabs">
+            <ul>
+                <li><a href="#game-options-tabs-1">Load</a></li>
+                <li><a href="#game-options-tabs-2">Save</a></li>
+                <li><a href="#game-options-tabs-3">Instructions</a></li>
+            </ul>
+            <div id="game-options-tabs-1">
+                <input type="file" id="file-upload" class="text ui-widget-content ui-corner-all">
+                <button id="game-options-load" class="text ui-widget-content ui-corner-all">Load Selected File</button>
+                <textarea readonly id="file-contents-textarea" style="height: 100px; width: 100%;resize: vertical;" class="text ui-widget-content ui-corner-all"></textarea>
+                <button id="game-options-play-game" class="text ui-widget-content ui-corner-all">Play Puzzle File</button>
+            </div>
+            <div id="game-options-tabs-2">
+                <button id="game-options-encode-progress" class="text ui-widget-content ui-corner-all">Encode Progress</button>
+                <textarea readonly id="game-progress-textarea" style="height: 100px; width: 100%;resize: vertical;" class="text ui-widget-content ui-corner-all"></textarea>
+                <button id="game-options-download-progress" class="text ui-widget-content ui-corner-all">Download Progress</button>
+
+            </div>
+            <div id="game-options-tabs-3">
+            </div>
+        </div>
     </div>
 
     <div id="packet-results-dialog" title="" style="display: none;">

@@ -1,5 +1,8 @@
 let allFieldsObjects;
 let allFieldsHTML;
+let validForwardingDestinations;
+let validInterfaceDestinations;
+let validNetworkAddresses;
 
 function openModal() {
     if (controls.shift.isDown) {
@@ -11,10 +14,37 @@ function openModal() {
         initDialog(this.nf, this.div, this.gameInstance);
         initButtons(this.nf, this.div, this.accordion, this.button, this.gameInstance);
 
+        initializeAutocomplete(this.nf);
+
         $(this.div).dialog("open");
     }
 }
 
+function initializeAutocomplete(nf) {
+    if (nf.type === "Router") {
+        validForwardingDestinations = [];
+        for (let i = 0; i < nf.edges.length; i++) {
+            let node = nf.edges[i].getOtherNode(nf);
+            validForwardingDestinations.push(node.type + " " + node.ID);
+        }
+        
+        validInterfaceDestinations = validForwardingDestinations.slice();
+        validInterfaceDestinations.push("*");
+        validForwardingDestinations.push("DROP PACKET");
+    }
+}
+
+function initializeGlobalNetworkAddresses(nw){
+    validNetworkAddresses = [];
+    validNetworkAddresses.push("*");
+
+    for (let i = 0; i < nw.nodes.length; i++){
+        validNetworkAddresses.push(nw.nodes[i].type + " " + nw.nodes[i].ID);
+    }
+    for (let i = 0; i < nw.nfs.length; i++){
+        validNetworkAddresses.push(nw.nfs[i].type + " " + nw.nfs[i].ID);
+    }
+}
 
 function initButtons(nf, div, accordion, button, gameInstance) {
     $(button).button({
@@ -49,7 +79,7 @@ function initButtons(nf, div, accordion, button, gameInstance) {
     }
 }
 
-function deleteNF(event){
+function deleteNF(event) {
     let nf = event.data.nf;
     nf.destroy();
     $(event.data.div).dialog('close');

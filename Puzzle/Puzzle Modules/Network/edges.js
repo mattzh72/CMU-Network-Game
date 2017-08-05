@@ -1,12 +1,15 @@
 function edge(network, node1, node2, gameInstance) {
     this.ID = network.edges.length;
+    this.network = network;
     this.type = "Edge";
     this.node1 = node1;
     this.node2 = node2;
     this.graphics = gameInstance.add.graphics(TOP_LEFT_X, TOP_LEFT_Y);
 
-    network.edges.push(this);
-    this.drawEdge();
+    if (node1 && node2) {
+        network.edges.push(this);
+        this.drawEdge();
+    }
 }
 
 edge.prototype.drawEdge = function (styleConfig) {
@@ -25,14 +28,7 @@ edge.prototype.drawEdge = function (styleConfig) {
     if (styleConfig) {
         styles = styleConfig;
     } else {
-        styles = [
-//        [15, 0x303030, 0.8],
-//        [13, 0x696969, 0.6], 
-//        [10, 0x696969, 0.5], 
-        [2, 0x787878, 1],
-//        [7, 0xffffff, 0.2],
-//        [10, 0xF3CBD1, 0.1],
-        ];
+        styles = [[2, 0x787878, 1]];
     }
 
     for (let i = 0; i < styles.length; i++) {
@@ -80,4 +76,32 @@ edge.prototype.getOtherNode = function (node) {
     }
 
     return otherNode;
+}
+
+edge.prototype.removeSelf = function () {
+    for (let i = 0; i < this.network.edges.length; i++){
+        let edge = this.network.edges[i];
+        if (edge.equals(this)){
+            this.network.removeEdge(this);
+        }
+    }
+}
+
+edge.prototype.destroy = function () {
+    this.ID = null;
+    this.network = null;
+    this.node1 = null;
+    this.node2 = null;
+    this.graphics.destroy();    
+}
+
+edge.prototype.package = function () {
+    let edgeObj = {
+        ID: this.ID,
+        type: this.type,
+        node1: [this.node1.type, this.node1.ID],
+        node2: [this.node2.type, this.node2.ID],
+    };
+
+    return edgeObj;
 }

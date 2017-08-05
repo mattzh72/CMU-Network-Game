@@ -4,8 +4,10 @@ function router(ID, x, y, gameInstance) {
     this.routingTable = [];
     this.clients = [];
     this.edges = [];
-    this.attachedFunctions = [];
+    this.attachedNFs = [];
     this.configs = [];
+    this.nearbyPositions = [];
+
     this.fields = [
         {
             name: "Source",
@@ -14,6 +16,10 @@ function router(ID, x, y, gameInstance) {
         {
             name: "Destination",
             title: "The router number that the packet is heading towards."
+        },
+        {
+            name: "Interface",
+            title: "The last router/client the packet was sent from."
         },
         {
             name: "Tag",
@@ -26,6 +32,10 @@ function router(ID, x, y, gameInstance) {
         {
             name: "Alert",
             title: "Optional field. This can be used to alert the network operator.",
+        },
+        {
+            name: "Rewrite",
+            title: "Optional field. This can be used to rewrite packet contents.",
         },
     ];
     this.tooltip;
@@ -102,6 +112,14 @@ router.prototype.onDrag = function () {
     }
 }
 
+router.prototype.updateDrag = function () {
+    for (let i = 0; i < this.nearbyPositions.length; i++) {
+        let nearbySprite = this.nearbyPositions[i].sprite;
+        nearbySprite.x = this.sprite.x + this.nearbyPositions[i].distanceX;
+        nearbySprite.y = this.sprite.y + this.nearbyPositions[i].distanceY;
+    }
+}
+
 
 router.prototype.onDropped = function () {
     for (let i = 0; i < this.edges.length; i++) {
@@ -119,7 +137,28 @@ router.prototype.onDropped = function () {
             edge.drawEdge();
         }
     }
-    this.sprite.bringToTop();
+}
+
+router.prototype.calculateNearbyPositions = function () {
+    this.nearbyPositions = [];
+    for (let i = 0; i < this.clients.length; i++) {
+        let entry = {
+            sprite: this.clients[i].sprite,
+            distanceX: this.clients[i].sprite.x - this.sprite.x,
+            distanceY: this.clients[i].sprite.y - this.sprite.y,
+        };
+        this.nearbyPositions.push(entry);
+    }
+
+    for (let i = 0; i < this.attachedNFs.length; i++) {
+        let entry = {
+            sprite: this.attachedNFs[i].sprite,
+            distanceX: this.attachedNFs[i].sprite.x - this.sprite.x,
+            distanceY: this.attachedNFs[i].sprite.y - this.sprite.y,
+        };
+        this.nearbyPositions.push(entry);
+    }
+
 }
 
 router.prototype.removeEdge = function (edge) {
@@ -155,6 +194,7 @@ router.prototype.initializeSprite = function (sprite, ID, gameInstance) {
         gameInstance: gameInstance,
     });
     this.sprite.events.onDragStart.add(this.onDrag, this);
+    this.sprite.events.onDragUpdate.add(this.updateDrag, this);
     this.sprite.events.onDragStop.add(this.onDropped, this);
 }
 
@@ -182,6 +222,9 @@ router.prototype.onHover = function () {
         x: PUZZLE_SCALE + 0.05,
         y: PUZZLE_SCALE + 0.05,
     }, 200, Phaser.Easing.Linear.In, true);
+
+    this.router.calculateNearbyPositions();
+    this.router.sprite.bringToTop();
 }
 
 router.prototype.stopHover = function () {
@@ -230,22 +273,60 @@ router.prototype.getConfigByID = function (ID) {
     }
 };
 
-router.prototype.addNF = function(nf){
-    this.attachedFunctions.push(nf);
+router.prototype.addNF = function (nf) {
+    this.attachedNFs.push(nf);
 }
 
-router.prototype.findNF = function(type, ID){
-    for (let i = 0; i < this.attachedFunctions; i++){
-        if (this.attachedFunctions[i].type == type && this.attachedFunctions[i].type == ID){
-            return this.attachedFunctions[i];
+router.prototype.findNF = function (type, ID) {
+    for (let i = 0; i < this.attachedNFs; i++) {
+        if (this.attachedNFs[i].type == type && this.attachedNFs[i].type == ID) {
+            return this.attachedNFs[i];
         }
     }
 }
 
-router.prototype.removeNF = function(nf){
-    for (let i = 0; i < this.attachedFunctions; i++){
-        if (this.attachedFunctions[i].equals(nf)){
-            this.attachedFunctions.splice(i, 1);
+router.prototype.removeNF = function (nf) {
+
+    for (let i = 0; i < this.attachedNFs.length; i++) {
+        if (this.attachedNFs[i].equals(nf)) {
+            this.attachedNFs.splice(i, 1);
+
         }
     }
+}
+
+router.prototype.destroy = function () {
+    this.sprite.destroy();
+    for (let i = 0; i < this.edges.length; i++){
+        this.edges[i].destroy();
+    }
+    if (this.tooltip){
+        this.tooltip.destroy();
+    }
+}
+
+router.prototype.package = function () {
+    let nfs = [];
+    for (let i = 0; i < this.attachedNFs.length; i++){
+        let nf = [this.attachedNFs[i].type, this.attachedNFs[i].ID];
+        nfs.push(nf);
+    }
+    
+    let clts = [];
+    for (let i = 0; i < this.clients.length; i++){
+        let clt = [this.clients[i].type, this.clients[i].ID];
+        clts.push(clt);
+    }
+    
+    let routerObj = {
+        ID: this.ID,
+        type: this.type,
+        x: this.sprite.x,
+        y: this.sprite.y,
+        configs: this.configs,
+        attachedNFs: nfs,
+        clients: clts,
+    };
+
+    return routerObj;
 }

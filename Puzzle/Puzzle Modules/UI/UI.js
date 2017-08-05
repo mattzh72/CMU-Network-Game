@@ -4,6 +4,7 @@ let sidePanel2;
 let ACLButton;
 
 let packetTestButton;
+let gameOptionsButton;
 
 function initPanels(network, gameInstance) {
     sidePanel1 = initSidePanel(0, 0, gameInstance);
@@ -12,11 +13,10 @@ function initPanels(network, gameInstance) {
     sidePanel2 = initSidePanel(0, 0, gameInstance);
     sidePanel2.bringToTop();
 
-
     addNFButtons(network, gameInstance);
 
     addPacketTestButton(network, gameInstance);
-
+    addGameOptionsButton(network, gameInstance);
 }
 
 function initSidePanel(x, y, gameInstance) {
@@ -33,25 +33,31 @@ function bringUIToTop() {
     ACLButton.bringToTop();
 }
 
-function updatePanelPositions() {
-    sidePanel1.x = window.innerWidth - sidePanel1.width / 2;
-    sidePanel1.y = window.innerHeight / 2 - sidePanel1.height / 2;
+function updatePanelPositions(gameInstance) {
+    let PADDING_X = window.innerWidth + gameInstance.camera.x
+    let PADDING_Y = window.innerHeight/2 + gameInstance.camera.y;
+    
+    sidePanel1.x = PADDING_X - sidePanel1.width / 2 ;
+    sidePanel1.y = PADDING_Y - sidePanel1.height / 2;
 
-    sidePanel2.x = window.innerWidth - sidePanel2.width / 2;
-    sidePanel2.y = window.innerHeight / 2 + sidePanel2.height / 2;
+    sidePanel2.x = PADDING_X - sidePanel2.width / 2;
+    sidePanel2.y = PADDING_Y + sidePanel2.height / 2;
 
-    ACLButton.x = sidePanel1.x - sidePanel1.width / 4;
-    ACLButton.y = sidePanel1.y - sidePanel1.height / 4;
+    ACLButton.x = PADDING_X - sidePanel1.width / 4;
+    ACLButton.y = PADDING_Y - sidePanel1.height / 4; 
 
-    packetTestButton.x = sidePanel2.x;
-    packetTestButton.y = sidePanel2.y;
+    packetTestButton.x = PADDING_X - sidePanel2.width / 2;
+    packetTestButton.y = PADDING_Y + sidePanel2.height / 4;
+    
+    gameOptionsButton.x = PADDING_X - sidePanel2.width / 2;
+    gameOptionsButton.y = PADDING_Y +  3* sidePanel2.height / 4;
 }
 
 function addNFButtons(network, gameInstance) {
     ACLButton = gameInstance.add.button(0, 0, 'ACL', spawnNF, {
         type: "ACL",
         gameInstance: gameInstance,
-        network: network
+        network: network,
     });
     ACLButton.scale.setTo(0.5, 0.5);
     ACLButton.anchor.setTo(0.5, 0.5);
@@ -59,7 +65,7 @@ function addNFButtons(network, gameInstance) {
 
 function spawnNF() {
     if (this.type === "ACL") {
-        new ACL(this.network, this.gameInstance);
+        let acl = new ACL(this.network, this.gameInstance);
     }
 }
 
@@ -70,4 +76,13 @@ function addPacketTestButton(nw, gameInstance) {
     });
     packetTestButton.scale.setTo(0.8, 0.8);
     packetTestButton.anchor.setTo(0.5, 0.5);
+}
+
+function addGameOptionsButton(nw, gameInstance){
+    gameOptionsButton = gameInstance.add.button(0, 0, 'game_guide', openGameOptionsModal, {
+        nw: nw, 
+        gameInstance: gameInstance,
+    });
+    gameOptionsButton.scale.setTo(0.5, 0.5);
+    gameOptionsButton.anchor.setTo(0.5, 0.5);    
 }

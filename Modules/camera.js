@@ -1,5 +1,5 @@
 let controls;
-let CAMERA_SPEED = 20;
+let CAMERA_SPEED = 10;
 
 /**
  * Initalizes the control object

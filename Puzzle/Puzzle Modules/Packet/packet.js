@@ -6,6 +6,7 @@ function packet(src, dest, tags, content) {
 
     this.currentLoc = src;
     this.sprite;
+    this.alerts = [];
 }
 
 packet.prototype.getNextLoc = function (nw) {
@@ -34,15 +35,24 @@ packet.prototype.getNextLoc = function (nw) {
         }
 
         if (matchedConfig) {
+            if (matchedConfig.Forward === "DROP PACKET") {
+                return null;
+            }
+                        
             let nextLocArr = matchedConfig.Forward.trim().split(" ");
             let msg = matchedConfig.Alert;
+            let rewrite = matchedConfig.Rewrite;
 
             if (msg != "") {
-                alert(msg);
+                let alert = {
+                    loc: loc,
+                    msg: msg,
+                };
+                this.alerts.push(alert);
             }
-
-            if (nextLocArr === "") {
-                return null;
+            
+            if (rewrite != ""){
+                this.content = rewrite;
             }
 
             return nw.findNode(nextLocArr[0], nextLocArr[1]);
@@ -157,7 +167,7 @@ packet.prototype.addTags = function () {
         let configs = currentNF.configs;
 
         for (let i = 0; i < configs.length; i++) {
-            if (this.matchNFConfig(configs[i])) {
+            if (this.matchNFConfig(configs[i]) && !this.tags.includes(configs[i].Tag.trim())) {
                 this.tags.push(configs[i].Tag);
             }
         }
@@ -175,4 +185,15 @@ packet.prototype.initializeSprite = function (x, y, gameInstance) {
     this.sprite.scale.setTo(0.5, 0.5);
     gameInstance.physics.arcade.enable(this.sprite);
     this.sprite.body.gravity.y = 0;    
+}
+
+packet.prototype.package = function (){
+    let packageObj = {
+        source: this.src.package(),
+        destination: this.dest.package(),
+        tags: this.tags,
+        content: this.content,
+    };
+    
+    return packageObj;
 }

@@ -13,8 +13,8 @@ function openPacketModal() {
             effect: "blind",
             duration: 1000
         },
-        height: 400,
-        width: 500,
+        height: 600,
+        width: 400,
         title: "Deploy A Test Packet",
         close: function () {
             addControls(gameInstance);
@@ -45,34 +45,7 @@ function openResultsModal(packet, path){
     packet.sprite.body.velocity.x = 0;
     packet.sprite.body.velocity.y = 0;
     
-    $("#packet-results-table").remove();
-    let section = "<table id ='packet-results-table'>"
-    section += "<tr>";
-    section += "<th>";
-    section += "Order";
-    section += "</th>";
-    section += "<th>";
-    section += "Location";
-    section += "</th>";
-    section += "<th>";
-    section += "Packet Tags";
-    section += "</th>";
-    section += "</tr>";
-    for (let i = 0; i < path.length; i++) {
-        let entry = path[i];
-        section += "<tr>";
-        section += "<td>";
-        section += i+1;
-        section += "</td>";
-        section += "<td>";
-        section += entry.loc.type + " " + entry.loc.ID;
-        section += "</td>";
-        section += "<td>";
-        section += (entry.tags.length === 0) ? "(None)":entry.tags;
-        section += "</td>";
-        section += "</tr>";
-    }
-    section += "</table>";
+    let section = displayPacketInfoAsTable( path, "packet-results-table");
 
     $("#packet-results-dialog").append(section);
     
@@ -97,6 +70,39 @@ function openResultsModal(packet, path){
      $("#packet-results-dialog").dialog("open");
 }
 
+function displayPacketInfoAsTable(path, tableID){
+    $("#" + tableID).remove();
+    let section = "<table id ='" + tableID + "'>";
+    section += "<tr>";
+    section += "<th>";
+    section += "Order";
+    section += "</th>";
+    section += "<th>";
+    section += "Location";
+    section += "</th>";
+    section += "<th>";
+    section += "Packet Tags";
+    section += "</th>";
+    section += "</tr>";
+    for (let i = 0; i < path.length; i++) {
+        let entry = path[i];
+        section += "<tr>";
+        section += "<td>";
+        section += i+1;
+        section += "</td>";
+        section += "<td>";
+        section += entry.loc.type + " " + entry.loc.ID;
+        section += "</td>";
+        section += "<td>";
+        section += (entry.tags.length === 0) ? "(None)": entry.tags;
+        section += "</td>";
+        section += "</tr>";
+    }
+    section += "</table>";
+    
+    return section;
+}
+
 
 function testPacketWrapper(event){
     event.preventDefault();
@@ -108,7 +114,8 @@ function testPacketWrapper(event){
     let gameInstance = event.data.gameInstance;
             
     if (checkCompleteness([src, dest])){
-        testPacket(nw, src.val(), dest.val(), tags.val(), content.val(), gameInstance);
+        let testPacketObj = testPacket(nw, src.val(), dest.val(), tags.val(), content.val());
+        animatePath(testPacketObj.path, testPacketObj.packet, nw, gameInstance);
     }
     
     $("#packet-dialog").dialog("close");

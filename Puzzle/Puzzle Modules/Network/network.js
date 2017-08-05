@@ -10,17 +10,16 @@ function network(ID, gameInstance) {
     this.ID = ID;
     this.gameInstance = gameInstance;
     this.nodes = [];
-    this.clients = [];
     this.edges = [];
     this.nfs = [];
     this.matrix = [];
     this.allPaths = [];
 
     //Initialize global variables
-    TOP_LEFT_X = gameInstance.world.centerX - window.innerWidth / 2;
-    TOP_LEFT_Y = gameInstance.world.centerY - window.innerHeight / 2;
-    BOTTOM_RIGHT_X = gameInstance.world.centerX + window.innerWidth / 2;
-    BOTTOM_RIGHT_Y = gameInstance.world.centerY + window.innerHeight / 2;
+    TOP_LEFT_X = 0;
+    TOP_LEFT_Y = 0;
+    BOTTOM_RIGHT_X = 500;
+    BOTTOM_RIGHT_Y = 500;
 }
 
 network.prototype.calculatePaths = function () {
@@ -127,3 +126,32 @@ network.prototype.findNode = function(type, ID){
     
     return null;
 }
+
+network.prototype.hasEdge = function(edge){
+    for (let i = 0; i < this.edges.length; i++){
+        if (this.edges[i].equals(edge)){
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+network.prototype.copy = function (otherNetwork) {
+    for (k in otherNetwork){
+        if (otherNetwork.hasOwnProperty(k)){
+            network[k] = otherNetwork[k];
+        }
+    }
+}
+
+network.prototype.destroy = function () {
+    this.ID = null;
+    this.gameInstance = null;
+    this.nodes = null;
+    this.edges = null;
+    this.nfs = null;
+    this.matrix = null;
+    this.allPaths = null;    
+}
+

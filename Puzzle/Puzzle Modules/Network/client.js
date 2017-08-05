@@ -1,7 +1,6 @@
 function client(ID, x, y, gameInstance) {
     let edge;
 
-
     this.type = "Client";
     this.sprite = gameInstance.add.sprite(x, y, 'client');
     this.tooltip;
@@ -39,7 +38,7 @@ client.prototype.stopHover = function () {
 
     this.client.edge.eraseEdge();
     this.client.edge.drawEdge();
-    
+
     //scaling
     this.gameInstance.add.tween(this.client.sprite.scale).to({
         x: CLIENT_SCALE,
@@ -61,13 +60,14 @@ client.prototype.onHover = function () {
 
     this.client.edge.eraseEdge();
     this.client.edge.drawEdge(styles);
-    
-    
+
+
     //scaling
     this.gameInstance.add.tween(this.client.sprite.scale).to({
         x: CLIENT_SCALE + 0.05,
         y: CLIENT_SCALE + 0.05,
     }, 200, Phaser.Easing.Linear.In, true);
+    this.client.sprite.bringToTop();
 }
 
 client.prototype.initToolTip = function (ID, sprite, gameInstance) {
@@ -107,4 +107,23 @@ client.prototype.updateEdge = function () {
     } else if (edge.graphics.lineWidth > 0) {
         edge.eraseEdge();
     }
+}
+
+client.prototype.destroy = function () {
+    if (this.tooltip) {
+        this.tooltip.destroy();
+    }
+    this.edge.destroy();
+    this.sprite.destroy();
+}
+
+client.prototype.package = function () {
+    let clientObj = {
+        ID: this.ID,
+        type: this.type,
+        x: this.sprite.x,
+        y: this.sprite.y,
+    };
+
+    return clientObj;
 }

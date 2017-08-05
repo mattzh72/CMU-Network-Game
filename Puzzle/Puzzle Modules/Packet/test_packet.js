@@ -1,14 +1,16 @@
 let PACKET_PATH_SPEED = 1500;
 
-function testPacket(nw, src, dest, tags, content, gameInstance) {
+function testPacket(nw, src, dest, tags, content) {
     setInputsNetwork(nw, false);
 
-    if (tags === "") {
-        tags = [];
-    } else {
-        tags = tags.split(",");
-        for (let i = 0; i < tags.length; i++) {
-            tags[i] = tags[i].trim();
+    if (typeof tags === "string"){
+        if (tags === "") {
+            tags = [];
+        } else {
+            tags = tags.split(",");
+            for (let i = 0; i < tags.length; i++) {
+                tags[i] = tags[i].trim();
+            }
         }
     }
 
@@ -35,7 +37,7 @@ function testPacket(nw, src, dest, tags, content, gameInstance) {
         pckt.currentLoc = nextLoc;
         path.push({
             loc: pckt.currentLoc,
-            tags: pckt.tags,
+            tags: pckt.tags.slice(),
         });
         nextLoc = pckt.getNextLoc(nw);
         
@@ -46,8 +48,13 @@ function testPacket(nw, src, dest, tags, content, gameInstance) {
             }
         }
     }
+    
+    let testPacketObj = {
+        packet: pckt,
+        path: path,
+    };
 
-    animatePath(path, pckt, nw, gameInstance);
+    return testPacketObj;
 }
 
 function preprocessText(text) {
@@ -67,14 +74,21 @@ function animatePath(path, packet, network, gameInstance) {
 
     
     for (let i = 1; i < path.length; i++) {
-        setTimeout(movePacket, i * PACKET_PATH_SPEED, packet.sprite, path[i].loc.sprite, 10, PACKET_PATH_SPEED, graphics, gameInstance);
+        setTimeout(movePacket, i * PACKET_PATH_SPEED, packet, path[i].loc, 10, PACKET_PATH_SPEED, graphics, i, gameInstance);
     }
 
     setTimeout(endPacketTest, path.length * PACKET_PATH_SPEED, packet, path, network, graphics);    
 }
 
-function movePacket(sprite, loc, speed, time, graphics, gameInstance) {
-    gameInstance.physics.arcade.moveToObject(sprite, loc, speed, time);
+function movePacket(packet, loc, speed, time, graphics, iter, gameInstance) {
+    gameInstance.physics.arcade.moveToObject(packet.sprite, loc.sprite, speed, time);
+    
+    let alertObj = packet.alerts[iter];
+    if (alertObj){
+        if (alertObj.loc.equals(loc)){
+            setTimeout(alert, PACKET_PATH_SPEED, alertObj.msg);
+        }
+    }
 
     graphics.clear();
     let styles = [
@@ -85,7 +99,7 @@ function movePacket(sprite, loc, speed, time, graphics, gameInstance) {
         [2, 0xF3CBD1, 1],
     ];
     
-    drawPath(graphics, styles, sprite, loc);
+    drawPath(graphics, styles, packet.sprite, loc.sprite);
 }
 
 function drawPath(graphics, styles, obj1, obj2){

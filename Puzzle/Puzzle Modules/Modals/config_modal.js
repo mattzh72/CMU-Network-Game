@@ -88,27 +88,67 @@ function addNewConfig(event) {
     }
 
     removeControls(event.data.gameInstance);
-    
-    if (event.data.nf.fields[event.data.nf.fields.length - 1].options){
-        allFieldsObjects[allFieldsObjects.length - 1].autocomplete({
+
+    if (type === "Router") {
+        $("#Forward").autocomplete({
+            source: validForwardingDestinations,
             minLength: 0,
-            source: event.data.nf.fields[event.data.nf.fields.length - 1].options
+            appendTo: "#new-config-fieldset"
+        }).click(function () {
+            $(this).autocomplete('search', $(this).val())
         });
-        allFieldsObjects[allFieldsObjects.length - 1].bind('focus', function () {
-            $(this).autocomplete("search");
+        $("#Interface").autocomplete({
+            source: validInterfaceDestinations,
+            minLength: 0,
+            appendTo: "#new-config-fieldset"
+        }).click(function () {
+            $(this).autocomplete('search', $(this).val())
         });
     }
+    
+    $("#Source").autocomplete({
+        source: validNetworkAddresses,
+        minLength: 0,
+        appendTo: "#new-config-fieldset"
+    }).click(function () {
+        $(this).autocomplete('search', $(this).val())
+    });
+    $("#Destination").autocomplete({
+        source: validNetworkAddresses,
+        minLength: 0,
+        appendTo: "#new-config-fieldset"
+    }).click(function () {
+        $(this).autocomplete('search', $(this).val())
+    });
+    
+    $( document ).tooltip();
 }
 
 function addNewConfigByType(nf) {
     let config = null;
     let lastField = allFieldsObjects[allFieldsObjects.length - 1];
-    
-    if (checkCompleteness(allFieldsObjects)) {
+
+    let allFieldsFilled = checkCompleteness(allFieldsObjects);
+    let validForward = true;
+    let validInterface = true;
+    let validDestination = checkValid($("#Destination"), validNetworkAddresses);
+    let validSource = checkValid($("#Source"), validNetworkAddresses);
+
+    if (nf.type === "Router") {
+        let nearbyNodeNames = [];
+        for (let i = 0; i < nf.edges.length; i++) {
+            let node = nf.edges[i].getOtherNode(nf);
+            nearbyNodeNames.push(node.type + " " + node.ID);
+        }
+        validForward = checkValid($("#Forward"), validForwardingDestinations);
+        validInterface = checkValid($("#Interface"), validInterfaceDestinations);
+    }
+
+    if (allFieldsFilled && validForward && validInterface) {
         let vals = getValues(allFieldsObjects);
         let keys = getIDs(allFieldsObjects);
-        
-        config = makeConfig(keys, vals);   
+
+        config = makeConfig(keys, vals);
         config.ID = nf.configs.length;
         nf.addRule(config);
     }
@@ -116,32 +156,32 @@ function addNewConfigByType(nf) {
     return config;
 }
 
-function makeConfig(keys, vals){
+function makeConfig(keys, vals) {
     let config = {};
 
-    for (let i = 0; i < keys.length; i++){
+    for (let i = 0; i < keys.length; i++) {
         let key = keys[i];
         let val = vals[i];
         config[key] = val;
     }
-    
+
     return config;
 }
 
-function getIDs(array){
+function getIDs(array) {
     let IDs = [];
     for (let i = 0; i < array.length; i++) {
         let ID = array[i][0].id;
         IDs.push(ID);
     }
-    return IDs;    
+    return IDs;
 }
 
 function getValues(array) {
     let values = [];
     for (let i = 0; i < array.length; i++) {
         let value = array[i].val();
-        if (value === ""){
+        if (value === "") {
             value = "(None)";
         }
         values.push(value);
@@ -175,7 +215,6 @@ function enableByNames(names) {
 function checkCompleteness(fields) {
     for (let i = 0; i < fields.length; i++) {
         let field = fields[i];
-//        console.log(field);
         if (field.val().length == 0) {
             field.addClass("ui-state-error");
             updateTips("Length of input must be greater than 0.");
@@ -192,23 +231,26 @@ function checkCompleteness(fields) {
     return true;
 }
 
-//function checkValid(field, validOptions) {
-//    let fieldVal = field.val();
-//
-//    if (fieldVal.lastIndexOf(" ") > 0) {
-//        fieldVal = fieldVal.substr(0, fieldVal.lastIndexOf(" "));
-//    }
-//    
-//    console.log(validOptions);
-//
-//    if (!validOptions.includes(fieldVal.charAt(0).toUpperCase() + fieldVal.slice(1))) {
-//        field.addClass("ui-state-error");
-//        updateTips("Invalid action for this network component.");
-//        return false;
-//    }
-//
-//    return true;
-//}
+function checkValid(field, validOptions) {
+    let fieldVal = field.val();
+    
+    let upperCaseFieldVal = fieldVal.toUpperCase();
+    
+    if (upperCaseFieldVal.indexOf("CLIENT") !== -1 || upperCaseFieldVal.indexOf("ROUTER") !== -1){
+        fieldVal = fieldVal.toLowerCase();
+        fieldVal = fieldVal.charAt(0).toUpperCase() + fieldVal.slice(1);
+    }
+
+    if (!validOptions.includes(fieldVal)) {
+        console.log(validOptions);
+        console.log(fieldVal);
+        field.addClass("ui-state-error");
+        updateTips("Could not find this network component.");
+        return false;
+    }
+
+    return true;
+}
 
 function updateTips(t) {
     let tips = $(".validateTips");

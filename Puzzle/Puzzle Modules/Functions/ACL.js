@@ -5,7 +5,7 @@ function ACL(network, gameInstance) {
     this.network = network;
     this.gameInstance = gameInstance;
     this.connectedNode = null;
-    this.edge = new edge(this.network, this, this.network.nodes[0], gameInstance);
+    this.edge = new edge(this.network, this, null, gameInstance);  
     this.edge.eraseEdge();
     this.disabledConfigs = [
         "Destination",
@@ -40,7 +40,6 @@ ACL.prototype.reportRules = function () {
 
 ACL.prototype.attach = function () {
     let minDist = 100;
-    this.connectedNode = null;
 
     for (let i = 0; i < this.network.nodes.length; i++) {
         let nextNode = this.network.nodes[i];
@@ -56,6 +55,10 @@ ACL.prototype.attach = function () {
         this.connectedNode.addNF(this);
         this.edge.updateNodes(this.connectedNode, this);
         this.edge.drawEdge();
+        
+        if (!this.network.hasEdge(this.edge)){
+            this.network.edges.push(this.edge);
+        }
     }
 }
 
@@ -65,7 +68,11 @@ ACL.prototype.detach = function () {
         this.connectedNode.removeEdge(this.edge);
         this.connectedNode.removeNF(this);
     }
+    
     this.edge.eraseEdge();
+    this.edge.removeSelf();
+    
+    this.connectedNode = null;
 }
 
 ACL.prototype.onHover = function () {
@@ -91,6 +98,8 @@ ACL.prototype.onHover = function () {
         x: PUZZLE_SCALE + 0.05,
         y: PUZZLE_SCALE + 0.05,
     }, 200, Phaser.Easing.Linear.In, true);
+    this.sprite.bringToTop();
+
 }
 
 ACL.prototype.stopHover = function () {
@@ -171,5 +180,25 @@ ACL.prototype.destroy = function () {
     this.network.removeNF(this);
     this.sprite.destroy();
     this.edge.graphics.destroy();
-    console.log(this.network.nfs);
+    if (this.tooltip){
+        this.tooltip.destroy();
+    }
+}
+
+ACL.prototype.package = function () {
+    let connectedNodeObj = null;
+    if (this.connectedNode){
+        connectedNodeObj = [this.connectedNode.type, this.connectedNode.ID];
+    }
+    
+    let ACLObj = {
+        ID: this.ID,
+        type: this.type,
+        x: this.sprite.x,
+        y: this.sprite.y,
+        connectedNode: connectedNodeObj,
+        configs: this.configs,
+    };
+    
+    return ACLObj;
 }
