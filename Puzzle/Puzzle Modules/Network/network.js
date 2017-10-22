@@ -13,6 +13,7 @@ function network(ID, gameInstance) {
     this.edges = [];
     this.nfs = [];
     this.matrix = [];
+    this.treePaths = [];
     this.allPaths = [];
 
     //Initialize global variables

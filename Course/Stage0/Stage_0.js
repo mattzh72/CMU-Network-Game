@@ -1,17 +1,12 @@
 Game.Stage_0 = function (game) {
     this.packetStream1 = {};
     this.guideSpriteData;
-    this.dialogueHasBeenOpened = {
-        roomsExplanation: false,
-        spriteExplanation: false,
-        pipeExplanation: false,
-        clientServerExplanation: false,
-        endTutorial: false,
-    };
+    this.lastTrigger = "startTutorial";
+
     
-    this.triggerDialogue = function(startY, endY, dialogue, openedBool){
-        if (dialogueOpen === "false" && this.dialogueHasBeenOpened[openedBool] == false && guideSprite.body.y > startY && guideSprite.body.y < endY) {
-            this.dialogueHasBeenOpened[openedBool]= true;
+    this.triggerDialogue = function(startY, endY, dialogue, currentTrigger){
+        if (dialogueOpen === "false" && this.lastTrigger != currentTrigger && guideSprite.body.y > startY && guideSprite.body.y < endY) {
+            this.lastTrigger = currentTrigger;
             this.guideSpriteData.dialogue = dialogue;
             
             this.time.events.add(1, openDialogue, {
@@ -71,10 +66,16 @@ Game.Stage_0.prototype = {
 
         //set up guide sprite
         let guideTextArr = [
-            "Hey there! I know you're probably wondering what's going on - don't worry, I'm here to explain everything. This popup on the bottom of your screen is called the dialogue box, and it will show up whenever you are talking with something on screen. Now click on the dialogue box to advance the dialogue!",
+            "Hey there! I know you're probably wondering what's going on - don't worry, I'm here to explain everything. This popup on the bottom of your screen is called the dialogue box, and it will show up whenever you are talking with something on screen. Now click on the dialogue box.",
+            
+            "I am your game guide through this course. I will show you around and give you tips on how to play! Don't worry about losing me - I'll be always hovering near your mouse. Now press the right arrow key or click this dialogue box to see what I have to say next.",
+            
             "This game is about computer networks: networking, network security, and network testing. Although you probably use computer networks everyday, this topic is complex and evolving everyday.",
+            
             "This game tries to put these complex topics in a more digestable and friendly form, so anyone can understand the world of computer networks. We will cover much of networks basics, from basic network elements like routers and clients, to advanced functions like proxies or an IPS.",
+            
             "You can look at what's in the game world by using the traditional WASD keys. You can also detect if something is interactive if you hover over it and see it change size. Try to find the diagram behind me that are interactive!",
+            
             "You can close the dialogue box whenever by pressing the ESC key. Now go out and find more things to click on!"
         ];
         this.guideSpriteData = initGuideSprite(guideTextArr, this);

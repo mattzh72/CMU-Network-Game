@@ -1,6 +1,3 @@
-//The sprite the camera is focused on
-let FOCUSED_SPRITE = null;
-
 /**
  * Loads in the assets required for network functions.
  * 
@@ -9,30 +6,31 @@ let FOCUSED_SPRITE = null;
  */
 function preloadNetworkFuncAssets(names, gameInstance) {
     if (names.includes("ACL")) {
-        gameInstance.load.atlas('ACLSprite', 'Modules/Assets/ACL.png', 'Modules/assets/ACL.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+        gameInstance.load.atlas('ACLSprite', 'Modules/Assets/ACL.png', 'Modules/Assets/ACL.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
         gameInstance.load.image('ACLScreen', 'Modules/Assets/ACL_screen.png');
     }
 
     if (names.includes("StatefulFW")) {
-        gameInstance.load.atlas('StatefulFW', 'Modules/Assets/StatefulFW.png', 'Modules/assets/StatefulFW.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+        gameInstance.load.atlas('StatefulFW', 'Modules/Assets/StatefulFW.png', 'Modules/Assets/StatefulFW.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
         gameInstance.load.image('ConnectionTable', 'Modules/Assets/small_screens.png');
     }
 
     if (names.includes("IPS")) {
-        gameInstance.load.atlas('IPS', 'Modules/Assets/IPS.png', 'Modules/assets/IPS.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+        gameInstance.load.atlas('IPS', 'Modules/Assets/IPS.png', 'Modules/Assets/IPS.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
     }
 
     if (names.includes("Router")) {
-        gameInstance.load.atlas('routingTableSprite', 'Modules/Assets/routing_table_sprite.png', 'Modules/assets/routing_table_sprite.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+        gameInstance.load.atlas('routingTableSprite', 'Modules/Assets/routing_table_sprite.png', 'Modules/Assets/routing_table_sprite.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
         gameInstance.load.image('routingTable', 'Modules/Assets/routing_table.png');
+        gameInstance.load.image('routingTableContent', 'Modules/Assets/routing_table_content.png');
     }
 
     if (names.includes("Proxy")) {
-        gameInstance.load.image('proxy', 'Modules/Assets/proxy.png');
+        gameInstance.load.atlas('proxy', 'Modules/Assets/proxy.png', 'Modules/Assets/proxy.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
     }
-
+    
     if (names.includes("NAT")) {
-        gameInstance.load.atlas('NAT', 'Modules/Assets/NAT.png', 'Modules/assets/NAT.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+        gameInstance.load.atlas('NAT', 'Modules/Assets/NAT.png', 'Modules/Assets/NAT.json', null, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
         gameInstance.load.image('NATScreen', 'Modules/Assets/NAT_screen.png');
     }
 }
@@ -54,6 +52,22 @@ function setStageACL(centerX, centerY, gameInstance) {
     return ACLSprite;
 }
 
+function setStageACLText(text1, text2){
+    let screenTxt = "";
+    let spriteTxt = "";
+    
+    if (text1){
+        screenTxt = text1;
+    }
+    
+    if (text2) {
+        spriteTxt = text2;
+    }
+    
+    ACLScreenDialogue = screenTxt;
+    ACLSpriteDialogue = spriteTxt;
+}
+
 
 /**
  * Sets the room for an Stateful Firewall by adding the appropriate sprites and initializing their movements.
@@ -72,6 +86,22 @@ function setStageStatefulFW(centerX, centerY, gameInstance) {
     return statefulFWSprite;
 }
 
+function setStageStatefulFWText(text1, text2){
+    let screenTxt = "";
+    let spriteTxt = "";
+    
+    if (text1){
+        screenTxt = text1;
+    }
+    
+    if (text2) {
+        spriteTxt = text2;
+    }
+    
+    connectionTableDialogue = screenTxt;
+    statefulFWSpriteDialogue = spriteTxt;
+}
+
 
 /**
  * Sets the room for an IPS by adding the appropriate sprites and initializing their movements.
@@ -88,29 +118,64 @@ function setStageIPS(centerX, centerY, gameInstance) {
     return IPS;
 }
 
+function setStageIPSText(text1){
+    let spriteTxt = "";
+    
+    if (text1){
+        spriteTxt = text1;
+    }
+    
+    IPSDialogue = spriteTxt;
+}
+
 
 function setStageRouter(centerX, centerY, gameInstance) {
-    let routingTable = addSprite(["Routing Table"], routingTableDialogue, 'routingTable', centerX, centerY, 0.32, 0, true, gameInstance).instance;
-    routingTable.events.onInputDown.add(toggleClicked, {
-        sprite: routingTable
+    addRoomDecor(centerX, centerY, 0.32, 'routingTable', gameInstance, {
+        key: 'routingTableContent',
+        scale: 0.7
+    }, {
+        title:"Routing Table",
+        content: routingTableDialogue,
     });
 
-
-    let routingTableSprite = addSprite(["Routing Table"], routingTableSpriteDialogue, 'routingTableSprite', centerX - 40, centerY, PLATFORMER_SCALE, 200, true, gameInstance).instance;
+    let routingTableSprite = addSprite(["Routing Table"], routerDialogue, 'routingTableSprite', centerX - 40, centerY, PLATFORMER_SCALE, 200, true, gameInstance).instance;
     initPlatformerSprite(routingTableSprite, gameInstance);
 
     return {
         routingTableSprite: routingTableSprite,
-        routingTable: routingTable
     };
 }
 
+function setStageRouterText(text1, text2){
+    let screenTxt = "";
+    let spriteTxt = "";
+    
+    if (text1) {
+        screenTxt = text1;
+    }
+        
+    if (text2){
+        spriteTxt = text2;
+    }
+    
+    routingTableDialogue = screenTxt;
+    routerDialogue = spriteTxt;
+}
+
 function setStageProxy(centerX, centerY, gameInstance) {
-    let proxy = addSprite(["Proxy"], proxyDialogue, 'proxy', centerX, centerY + 140, 0.35, 0, true, gameInstance).instance;
-    proxy.events.onInputDown.add(toggleClicked, {
-        sprite: proxy
-    });
+    let proxy = addSprite(["Proxy"], proxyDialogue, 'proxy', centerX, centerY + 140, PLATFORMER_SCALE, 200, true, gameInstance).instance;
+    initPlatformerSprite(proxy, gameInstance);
     return proxy;
+}
+    
+function setStageProxyText(text1){
+    let spriteTxt = "";
+    
+    if (text1) {
+        spriteTxt = text1;
+    }
+    
+    proxyDialogue = spriteTxt;
 }
 
 function setStageNAT(centerX, centerY, gameInstance) {
@@ -121,18 +186,17 @@ function setStageNAT(centerX, centerY, gameInstance) {
 
     return NAT;
 }
-
-
-/**
- * An internal function that is attached to the sprites in the rooms. 
- * Once a sprite is clicked, this function is called, and changes FOCUSED_SPRITE, the sprite the camera is following, to the recently clicked sprite. 
- */
-function toggleClicked() {
-    if (dialogueOpen == "moving") {
-        FOCUSED_SPRITE = this.sprite;
+    
+function setStageNATText(text1){
+    let spriteTxt = "";
+    
+    if (text1) {
+        sprite = text1;
     }
+        
+    
+    NATDialogue = spriteTxt;
 }
-
 
 /**
  * An internal function that is used to initialize platformer sprites.

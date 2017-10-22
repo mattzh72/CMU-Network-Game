@@ -10,8 +10,6 @@ let puzzle_modules = [
     "Network/bfs.js",
     "Functions/nf.js",
     "Functions/ACL.js",
-    "Functions/IPS.js",
-    "Functions/StatefulFW.js",
     "Modals/tool_modal.js",
     "Modals/config_modal.js",
     "Modals/function_modal.js",
@@ -21,8 +19,9 @@ let puzzle_modules = [
     "UI/UI.js",
     "Packet/packet.js",
     "Packet/test_packet.js",
+    "Packet/generate_policy_packets.js",
     "Loader/saver.js",
-    "Loader/saver_policy.js",
+    "Loader/generate_new_network.js",
 ];
 
 for (let i = 0; i < puzzle_modules.length; i++) {

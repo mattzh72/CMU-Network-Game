@@ -34,6 +34,8 @@ Game.Preload_0.prototype = {
     this.load.image('server3','Course/Stage0/Map/server_3.png');
     this.load.image('server4','Course/Stage0/Map/server_4.png');
         
+    this.load.image('tooltip', 'Puzzle/Assets/rectangle_panel.png');
+        
     //CHARACTER ASSETS
     preloadNetworkFuncAssets(["NAT", "Router", "ACL", "StatefulFW", "IPS", "Proxy"], this);
         

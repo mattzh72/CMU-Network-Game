@@ -1,29 +1,52 @@
-function saveProgress(nw){
+function saveProgress(nw, polPckts){
     let nwID = nw.ID;
     let nodes = nw.nodes;
     let edges = nw.edges;
     let nfs = nw.nfs;    
     
-    let progress = {
-        ID: nwID,
-        nodes: [],
-        edges: [],
-        nfs: [],
-    };
+    let policyPackets = polPckts;
     
+    if (!policyPackets){
+        policyPackets = nw.policyPackets;
+    } else {
+        policyPackets = encodePolicyPackets(polPckts);
+    }
+        
+    let progress = {
+        policyPackets: policyPackets,
+        network: {
+            ID: nwID,
+            nodes: [],
+            edges: [],
+            nfs: [],
+        }
+    };
+            
     for (let i = 0; i < nodes.length; i++){
         let node = nodes[i];
-        progress.nodes.push(node.package());
+        let package = node.package();
+        
+        let j = 0;
+        while(node["child-" + j]){
+            package["child-" + j] = [node["child-" + j].type, node["child-" + j].ID];
+            j++;
+        }
+        
+        if (node.parent){
+            package.parent = [node.parent.type, node.parent.ID];
+        }
+                
+        progress.network.nodes.push(package);
     }
-    
+        
     for (let i = 0; i < edges.length; i++){
         let edge = edges[i];
-        progress.edges.push(edge.package());
+        progress.network.edges.push(edge.package());
     }
     
     for (let i = 0; i < nfs.length; i++){
         let nf = nfs[i];
-        progress.nfs.push(nf.package());
+        progress.network.nfs.push(nf.package());
     }
         
     return progress;
@@ -32,7 +55,8 @@ function saveProgress(nw){
 function loadExistingGame(nw, progressJSON, gameInstance){
     clearStage(nw);
     
-    let progress = JSON.parse(progressJSON);
+    let puzzle = JSON.parse(progressJSON);
+    let progress = puzzle.network;
     nw.ID = progress.ID;
     nw.gameInstance = gameInstance;
     nw.nodes = [];
@@ -40,6 +64,7 @@ function loadExistingGame(nw, progressJSON, gameInstance){
     nw.nfs = [];
     nw.matrix = [];
     nw.allPaths = []; 
+    nw.policyPackets = puzzle.policyPackets;
         
     for (let i = 0 ; i < progress.nodes.length; i++){
         let nd = progress.nodes[i];
@@ -49,6 +74,7 @@ function loadExistingGame(nw, progressJSON, gameInstance){
             rtr.configs = nd.configs;
             rtr.clients = nd.clients;
             rtr.attachedNFs = nd.attachedNFs;   
+            
             nw.addNode(rtr);
         }
         
@@ -58,13 +84,34 @@ function loadExistingGame(nw, progressJSON, gameInstance){
         }
     }
     
+    for (let i = 0 ; i < progress.nodes.length; i++){
+        let nd = progress.nodes[i];
+        let nwNode = nw.nodes[i];
+        
+        if (nd.type === "Router"){
+            let j = 0;
+            while(nd["child-" + j]){
+                nwNode["child-" + j] = nw.findNode(nd["child-" + j][0], nd["child-" + j][1]);
+                j++;
+            }
+            
+            if(nd.parent){
+                nwNode.parent = nw.findNode(nd.parent[0], nd.parent[1]);
+            }
+        }
+        
+        if (nd.type === "Client"){
+            nwNode.parent = nw.findNode(nd.parent[0], nd.parent[1]);
+        }
+    }
+    
         
     for (let i = 0; i < progress.nfs.length; i++){
         let nf = progress.nfs[i];
                 
         if (nf.type === "ACL"){
             let acl = new ACL(nw, gameInstance);
-            acl.connectedNode = nf.connectedNode;
+            acl.connectedNode = nw.findNode(nf.connectedNode[0], nf.connectedNode[1]);
             acl.configs = nf.configs;
             
             acl.sprite.x = nf.x;
@@ -106,9 +153,6 @@ function loadExistingGame(nw, progressJSON, gameInstance){
             nd1.edge = e;
         } else if (nd1 instanceof nf){
             nd1.edge = e;
-            if (nd1.connectedNode){
-                nd1.edge.drawEdge();
-            }
         }
         
         if (nd2.type === "Router"){
@@ -117,9 +161,6 @@ function loadExistingGame(nw, progressJSON, gameInstance){
             nd2.edge = e;
         } else if (nd2 instanceof nf){
             nd2.edge = e;
-            if (nd2.connectedNode){
-                nd2.edge.drawEdge();
-            }
         }
     }
     
@@ -134,9 +175,26 @@ function loadExistingGame(nw, progressJSON, gameInstance){
     }
     
     initializeGlobalNetworkAddresses(nw);
-    
+        
 //    nw.outputNodes();
 //    nw.outputEdges();
+}
+
+function groomNetwork(nw){
+    for (let i = 0; i < nw.nodes.length; i++){
+        if (nw.nodes[i] instanceof router){
+            nw.nodes[i].attachedNFs = [];
+            nw.nodes[i].configs = [];
+        }
+    }
+        
+    for (let i = 0; i < nw.edges.length; i++){
+        if (nw.edges[i].node1 instanceof nf || nw.edges[i].node2 instanceof nf){
+            nw.removeEdge(nw.edges[i]);
+        }
+    }
+    
+    nw.nfs = [];
 }
 
 function clearStage(nw){

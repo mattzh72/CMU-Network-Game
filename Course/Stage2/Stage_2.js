@@ -4,6 +4,22 @@ Game.Stage_2 = function(game){
     this.Proxy;
     this.IPS;
     this.NAT;
+    
+    this.guideTextArr = [
+        "This module is about security in networks.  Network security is a very general term. This includes any action that network operators take to control the network.",
+
+        "Network operators implement security measures to prevent the misuse of their networks. This includes a whole host of possible scenarios.",
+
+        "Network operators may want to restrict access to certain websites. They may want to prevent outside networks to gain access into their network. They may want to be alerted if packets contain certain types of content.",
+
+        "Each of these scenarios can be met by integrating “network functions” into the network. These network functions are usually used to control the flow of data in the network, or essentially, secure a network.",
+
+        "Each network function can do certain things, and are designed to help network operators fit certain scenarios.",
+
+        "This module introduces four main network functions: Access Control Lists, Stateful Firewalls, Proxies, and Intrusion Prevention Systems.",
+
+        "Click on the colored characters inside the rooms and their tools to learn more!",    
+    ];
 };
 
 Game.Stage_2.prototype = {
@@ -24,8 +40,7 @@ Game.Stage_2.prototype = {
         this.StatefulFW = setStageStatefulFW(this.world.centerX, 900, this);
         
         //PROXY 
-        initPacketStream(610, 1525, 800, 1510, STREAM_DENSITY_FACTOR, false, this);         
-        initPacketStream(800, 1460, 1000, 1455, STREAM_DENSITY_FACTOR, false, this);  
+        initPacketStream(610, 1525, 1000, 1525, STREAM_DENSITY_FACTOR, false, this);         
         this.Proxy = setStageProxy(this.world.centerX, 1345, this);
         
         //IPS
@@ -36,13 +51,11 @@ Game.Stage_2.prototype = {
         initPacketStream(610, 2440, 1000, 2440, STREAM_DENSITY_FACTOR, false, this);      
         this.NAT = setStageNAT(this.world.centerX, 2530, this);
         
-        
-        let guideTextArr = [
-            "I am the Game Guide!",
-            "Press C to Close",
-        ];
-        
-        initGuideSprite(guideTextArr, this);
+        let guideSpriteData = initGuideSprite(this.guideTextArr, this);
+        this.time.events.add(100, openDialogue, {
+            spriteData: guideSpriteData,
+            gameInstance: this
+        });
     },
     
     update: function(){ 
@@ -53,6 +66,7 @@ Game.Stage_2.prototype = {
         addCollision(this.StatefulFW, this);
         addCollision(this.IPS, this);
         addCollision(this.NAT, this);
+        addCollision(this.Proxy, this);
 
         updateHelperSpritePos(this);
 

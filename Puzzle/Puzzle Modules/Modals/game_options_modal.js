@@ -14,7 +14,7 @@ function openGameOptionsModal() {
             effect: "blind",
             duration: 1000
         },
-        height: 400,
+        height: 500,
         width: 400,
         title: "Game Configuration",
         close: function () {
@@ -24,7 +24,14 @@ function openGameOptionsModal() {
 
     $("label").tooltip();
     $("#game-options-tabs").tabs();
-
+    
+    $("#game-options-maker-accordion").accordion({
+        heightStyle: "content",
+    });
+    
+    $("#game-options-player-accordion").accordion({
+        heightStyle: "content",
+    });
 
     $("#game-options-load").button({
         icon: "ui-icon-plusthick",
@@ -36,13 +43,31 @@ function openGameOptionsModal() {
     });
     $("#game-options-encode-progress").unbind().click({
         network: this.nw,
+        gameInstance: this.gameInstance,
     }, encodeGame);
 
     $("#game-options-download-progress").button({
         icon: "ui-icon-arrowthickstop-1-s",
     });
     $("#game-options-download-progress").unbind().click({
-        file: "puzzle_progress.json",
+        file: "progress.json",
+        textAreaID: "#game-progress-textarea",
+    }, download);
+    
+    $("#game-options-encode-puzzle").button({
+        icon: "ui-icon-transferthick-e-w",
+    });
+    $("#game-options-encode-puzzle").unbind().click({
+        network: this.nw,
+        gameInstance: this.gameInstance,
+    }, encodePuzzle);
+
+    $("#game-options-download-puzzle").button({
+        icon: "ui-icon-arrowthickstop-1-s",
+    });
+    $("#game-options-download-puzzle").unbind().click({
+        file: "puzzle.json",
+        textAreaID: "#game-puzzle-textarea",
     }, download);
 
     $("#game-options-play-game").button({
@@ -53,10 +78,53 @@ function openGameOptionsModal() {
         gameInstance: this.gameInstance,
     }, playGame);
 
+    $("#game-options-create-new-nw").button({
+        icon: "ui-icon-triangle-1-e",
+    });
+    $("#game-options-create-new-nw").unbind().click({
+        network: this.nw,
+        gameInstance: this.gameInstance,
+    }, generateTreeNwWrapper);
 
     removeControls(gameInstance);
 
     $("#game-options-dialog").dialog("open");
+}
+
+function generateTreeNwWrapper(event) {
+    let nw = event.data.network;
+    let gameInstance = event.data.gameInstance;
+
+    let name = $("#nw-name");
+    let levels = $("#nw-levels");
+    let min = $("#min-children");
+    let max = $("#max-children");
+
+    let allFieldsObjects = [];
+    allFieldsObjects.push(name);
+    allFieldsObjects.push(levels);
+    allFieldsObjects.push(min);
+    allFieldsObjects.push(max);
+
+    let complete = checkCompleteness(allFieldsObjects);
+    let levelsBounds = checkWithinBounds(levels, 2, 7);
+
+    if (complete && levelsBounds) {
+        generateTreeNW(nw, name.val(), parseInt(levels.val().trim()), parseInt(min.val().trim()), parseInt(max.val().trim()), gameInstance);
+        $("#game-options-dialog").dialog("close");
+    }
+}
+
+function checkWithinBounds(field, lowerBound, upperBound) {
+    let val = parseInt(field.val().trim());
+    
+    if (!(val <= upperBound && val >= lowerBound)) {
+        field.addClass("ui-state-error");
+        updateTips("Enter a value between " + lowerBound + " and " + upperBound + ".");
+        return false;
+    }
+
+    return true;
 }
 
 function playGame(event) {
@@ -84,22 +152,33 @@ function loadFileAsText() {
         };
 
         fileReader.readAsText(fileToLoad, "UTF-8");
-    } else if (!fileToLoad){
+    } else if (!fileToLoad) {
         document.getElementById("file-contents-textarea").value = "Error: No file chosen."
     }
 }
 
 function encodeGame(event) {
-//    let progressToSave = JSON.stringify(saveProgress(event.data.network), null,"\t");
-//    $("#game-progress-textarea").val(progressToSave);
-    let policyFile = JSON.stringify(saveAsPolicy(event.data.network), null, "\t");
-//    console.log(policyFile);
-    $("#game-progress-textarea").val(policyFile);
+    let progressToSave = JSON.stringify(saveProgress(event.data.network), null,"\t");
+    $("#game-progress-textarea").val(progressToSave);
+}
+
+function encodePuzzle(event){
+    let packetData = generatePolicyPackets(event.data.network, event.data.gameInstance);
+    
+    if (packetData.length === 0){
+        $("#game-puzzle-textarea").val("No configurations found in the network! Could not generate puzzle file."); 
+        return;
+    }
+    
+    groomNetwork(event.data.network);
+    let puzzleObj = saveProgress(event.data.network, packetData);
+    let puzzleJSON = JSON.stringify(puzzleObj, null,"\t");
+    $("#game-puzzle-textarea").val(puzzleJSON);    
 }
 
 function download(event) {
     let filename = event.data.file;
-    let text = $("#game-progress-textarea").val();
+    let text = $(event.data.textAreaID).val();
 
     if (text != "") {
         var element = document.createElement('a');
@@ -130,5 +209,3 @@ function checkJSONFile() {
     }
     return true;
 }
-
-

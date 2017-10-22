@@ -14,6 +14,8 @@ Game.Preload_2.prototype = {
     this.load.image('tileset5','Course/Stage2/Map/Rooms/sand_room.png');
     this.load.image('tileset6','Course/Stage2/Map/Rooms/yellow_room.png');  
     this.load.image('dialogue', 'Modules/Assets/dialogue.png');
+        
+    this.load.image('tooltip', 'Puzzle/Assets/rectangle_panel.png');
    
     //ASSETS FOR ROOMS
     preloadNetworkFuncAssets(["ACL", "StatefulFW", "IPS", "Proxy", "NAT"], this);

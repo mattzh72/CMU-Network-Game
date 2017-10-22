@@ -42,6 +42,13 @@ edge.prototype.drawEdge = function (styleConfig) {
     obj2.bringToTop();
 }
 
+edge.prototype.includes = function(node){
+    if (node1.equals(node) || node2.equals(node)){
+        return true;
+    }
+    
+    return false;
+}
 
 edge.prototype.eraseEdge = function () {
     this.graphics.clear();

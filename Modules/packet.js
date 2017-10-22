@@ -48,15 +48,7 @@ function initPacketStream(startX, startY, endX, endY, density, showDialogue, gam
     //Chooses between a short dialogue and the lesson dialogue
     let dialogue = ["Nothing interesting here"];
     if (showDialogue == true) {
-        dialogue = [
-            "When computers “talk” (send data) to one another, they send data in packets. A data packet can be made up of 2 different parts: a header and a payload.",
-            "The header includes information about the packet. This information is used by other programs to properly process and route this data to the right location (a router can use the header of a packet to decide where to send it).",
-            "For example, a header could contain information about the type of packet it is. It also contains the source and destination addresses (where the packet is coming from, and where it is heading to). Maybe you’ve heard about these special addresses, which are usually IP addresses.",
-            "IP addresses are super important - for a computer to communicate with other computers and Web servers on the Internet, it must have an IP address.",
-            "An IP address (IP stands for Internet Protocol) is a unique 32-bit number that identifies the location of your computer on a network. Basically, it works like your street address -- as a way to find out exactly where you are and deliver information to you.",
-            "The payload is the content of the data itself. For example, if you wanted to send a message to a friend on facebook, the letters of the message itself would be contained in the payload.",
-            "Press C to Close"
-        ];
+        dialogue = packetDialogue;
     }
 
     //Calls internal function calcStartPos() and stores it in an array
@@ -69,7 +61,7 @@ function initPacketStream(startX, startY, endX, endY, density, showDialogue, gam
 
     for (let i = 0; i < packetStreamData.packetArr.length; i++)
         gameInstance.physics.arcade.moveToXY(packetStreamData.packetArr[i], packetStreamData.END_X, packetStreamData.END_Y, 50);
-    
+        
     packetStreams.push(packetStreamData);
 }
 

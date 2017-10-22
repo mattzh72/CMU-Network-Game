@@ -1,6 +1,7 @@
 let dialogueBox;
 let blurb;
 let title;
+let dialogueProgressText;
 let style;
 let icon;
 let arrows;
@@ -29,15 +30,17 @@ function initDialogue(gameInstance) {
     dialogueBox.events.onInputDown.add(nextTxt, gameInstance);
     
 
-    //Initialize the icon, textArray, blurb, and title to blank values.
+    //Initialize the icon, textArray, blurb, dialogueProgressText, and title to blank values.
     textArray = [];
     initIcon('', gameInstance);
     blurb = initText("", 0.5, 500, gameInstance);
     title = initText("", 0.5, 200, gameInstance);
+    dialogueProgressText = initText("", 0.5, 200, gameInstance);
 
     //Scale all down to 0 to make it not visible to the player.
     blurb.scale.setTo(0, 0);
     title.scale.setTo(0, 0);
+    dialogueProgressText.scale.setTo(0, 0);
     icon.scale.setTo(0, 0);
 
     //Intialize the controls and add functionality.
@@ -70,13 +73,16 @@ function updateDialoguePos(gameInstance) {
 
     title.x = X_POS_OFFSET - 266;
     title.y = Y_POS_OFFSET - 268 + PADDING_BOTTOM;
+    
+    dialogueProgressText.x = X_POS_OFFSET + 266;
+    dialogueProgressText.y = Y_POS_OFFSET - 268 + PADDING_BOTTOM;
 
     icon.x = X_POS_OFFSET - 270;
     icon.y = Y_POS_OFFSET - dialogueBox.height / 2.5;
 }
 
 /**
- * An internal function used to initalize the blurb and title. 
+ * An internal function used to initalize the blurb, progressText, and title. 
  * This function adds text to the game world 
  * 
  * @param   {object}   text - The String to be initialized
@@ -115,6 +121,8 @@ function initIcon(image, gameInstance) {
  */
 function initDialogueControls(gameInstance) {
     let dialogueControls = {
+        next: gameInstance.input.keyboard.addKey(Phaser.Keyboard.RIGHT),
+        back: gameInstance.input.keyboard.addKey(Phaser.Keyboard.LEFT),
         close: gameInstance.input.keyboard.addKey(Phaser.Keyboard.ESC),
     };
 
@@ -122,11 +130,17 @@ function initDialogueControls(gameInstance) {
     dialogueControls.close.onDown.add(closeDialogue, {
         gameInstance: gameInstance
     });
+    
+    //LEFT is used to go to last text
+    dialogueControls.back.onDown.add(backTxt);
+    
+    //Right is used to go to next text
+    dialogueControls.next.onDown.add(nextTxt);
 }
 
 /**
  * An internal function that increments the index count. 
- * The count correspondes to the index of textArray.
+ * The count corresponds to the index of textArray.
  * 
  * Sets the blurb to the next text in textArray, if available.
  */
@@ -134,7 +148,27 @@ function nextTxt() {
     if (textIndex + 1 < textArray.length) {
         textIndex += 1;
         blurb.setText(textArray[textIndex]);
+        adjustDialogueProgressText();
     }
+}
+
+/**
+ * An internal function that decrements the index count.
+ * The count corresponds to the index of the textArray.
+ * 
+ * Sets the blurb to the last text in textArray, if available.
+ */
+function backTxt(){
+    if (textIndex > 0){
+        textIndex -= 1;
+        blurb.setText(textArray[textIndex]);
+        adjustDialogueProgressText();
+    }
+}
+
+function adjustDialogueProgressText(){
+    let text = (textIndex + 1) + "/" + textArray.length;
+    dialogueProgressText.setText(text);
 }
 
 /**
@@ -144,9 +178,10 @@ function nextTxt() {
  * The text is displayed with a time delay for aesthetic purposes.
  */
 function openDialogue() {
-    if (dialogueOpen === "false") {
+    if (dialogueOpen === "false" && !controls.shift.isDown) {
         textIndex = 0;
         dialogueOpen = "moving";
+        removeControls(this.gameInstance);
 
         //Load the text and the icon while the dialogue is moving. 
         //This disables the user's ability to change the content of the dialogue when it is still open.
@@ -161,6 +196,7 @@ function openDialogue() {
         //Set blurb to the first text String in the text array.
         blurb.setText(spriteData.dialogue[0]);
         title.setText(spriteData.name);
+        adjustDialogueProgressText();
 
         //Moves the dialogue box up in 1000ms
         this.gameInstance.physics.arcade.moveToXY(dialogueBox, dialogueBox.x, Y_POS_OFFSET - dialogueBox.height / 2, 20, 1000);
@@ -178,12 +214,14 @@ function openDialogue() {
         setTimeout(openObj, 1250, title, this.gameInstance);
         setTimeout(openObj, 1250, icon, this.gameInstance);
         setTimeout(openObj, 1250, blurb, this.gameInstance);
+        setTimeout(openObj, 1250, dialogueProgressText, this.gameInstance);
 
         //Bring all the elements to the top layer of the game
         //This way no sprites will overlap over the dialogue elements
         this.gameInstance.world.bringToTop(dialogueBox);
         this.gameInstance.world.bringToTop(title);
         this.gameInstance.world.bringToTop(blurb);
+        this.gameInstance.world.bringToTop(dialogueProgressText);
         this.gameInstance.world.bringToTop(icon);
         
     }
@@ -196,6 +234,7 @@ function openDialogue() {
  */
 function closeDialogue() {
     let Y_POS_OFFSET = this.gameInstance.camera.y + window.innerHeight - PADDING_BOTTOM;
+    addControls(this.gameInstance);
 
     if (dialogueOpen === "true") {
         dialogueOpen = "moving";
@@ -209,6 +248,7 @@ function closeDialogue() {
         //Close the icon and text immediately
         closeObj(icon, this.gameInstance);
         closeObj(blurb, this.gameInstance);
+        closeObj(dialogueProgressText, this.gameInstance);
         closeObj(title, this.gameInstance);
     }
 }

@@ -1,7 +1,10 @@
 let PACKET_PATH_SPEED = 1500;
 
-function testPacket(nw, src, dest, tags, content) {
-    setInputsNetwork(nw, false);
+function testPacket(nw, src, dest, tags, content, disableInputs) {
+    
+    if (disableInputs === true){
+        setInputsNetwork(nw, false);
+    }
 
     if (typeof tags === "string"){
         if (tags === "") {
@@ -26,23 +29,25 @@ function testPacket(nw, src, dest, tags, content) {
 
 
     let pckt = new packet(srcNode, destNode, tags, content);
-    let nextLoc = pckt.getNextLoc(nw);
+    let path = [];
 
-    let path = [{
-        loc: pckt.currentLoc,
-        tags: pckt.tags,
-    }];
+    while (pckt.currentLoc) {
+//        if (pckt.currentLoc){
+//            console.log("Current Location:" + pckt.currentLoc.type + " " + pckt.currentLoc.ID);
+//        }
+//        if (pckt.interface){
+//            console.log("Interface:" + pckt.interface.type + " " + pckt.interface.ID);
+//        }
+//        console.warn("ENDING");        
 
-    while (nextLoc) {
-        pckt.currentLoc = nextLoc;
         path.push({
             loc: pckt.currentLoc,
             tags: pckt.tags.slice(),
         });
-        nextLoc = pckt.getNextLoc(nw);
+        nextLoc = pckt.setNextLoc(nw);
         
         if (path.length % 20 === 0){
-            let terminate = confirm("This packet has been running for a while. Are you sure you want to continue this test?");
+            let terminate = confirm("This test run abnormally long. Are you sure you want to continue this test?");
             if (terminate){
                 break;
             }
@@ -77,14 +82,14 @@ function animatePath(path, packet, network, gameInstance) {
         setTimeout(movePacket, i * PACKET_PATH_SPEED, packet, path[i].loc, 10, PACKET_PATH_SPEED, graphics, i, gameInstance);
     }
 
-    setTimeout(endPacketTest, path.length * PACKET_PATH_SPEED, packet, path, network, graphics);    
+    setTimeout(endPacketTest, path.length * PACKET_PATH_SPEED, packet, path, network, graphics, gameInstance);    
 }
 
 function movePacket(packet, loc, speed, time, graphics, iter, gameInstance) {
     gameInstance.physics.arcade.moveToObject(packet.sprite, loc.sprite, speed, time);
     
     let alertObj = packet.alerts[iter];
-    if (alertObj){
+    if (alertObj && alertObj.msg != "(None)"){
         if (alertObj.loc.equals(loc)){
             setTimeout(alert, PACKET_PATH_SPEED, alertObj.msg);
         }
@@ -111,8 +116,8 @@ function drawPath(graphics, styles, obj1, obj2){
     }
 }
 
-function endPacketTest(packet, path, network, graphics){
-    openResultsModal(packet, path);
+function endPacketTest(packet, path, network, graphics, gameInstance){
+    openResultsModal(packet, path, gameInstance);
     setInputsNetwork(network, true);
     graphics.clear();
 }

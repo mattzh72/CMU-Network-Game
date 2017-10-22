@@ -10,6 +10,7 @@ let modules = [
     "stages.js",
     "guide.js",
     "dialogues.js",
+    "menu.js",
 ];
 
 for (let i = 0; i < modules.length; i++){

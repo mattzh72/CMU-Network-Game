@@ -101,13 +101,23 @@ router.prototype.outputEdges = function () {
     }
 }
 
-router.prototype.onDrag = function () {
-    for (let i = 0; i < this.edges.length; i++) {
-        let edge = this.edges[i];
-        let otherNode = edge.getOtherNode(this);
+router.prototype.onDrag = function () {    
+    if (this.parent){
+        for (let i = 0; i < this.edges.length; i++){
+            this.edges[i].eraseEdge();
+        }
+    }    
 
-        if (otherNode) {
-            edge.eraseEdge();
+    for (let i = 0; i < this.nearbyPositions.length; i++) {
+        let node = this.nearbyPositions[i].node;
+        
+        if(node.edges){
+            for (let j = 0; j < node.edges.length; j++){
+                node.edges[j].eraseEdge();
+            }
+            
+        } else if (node.edge){
+            node.edge.eraseEdge();
         }
     }
 }
@@ -122,43 +132,38 @@ router.prototype.updateDrag = function () {
 
 
 router.prototype.onDropped = function () {
-    for (let i = 0; i < this.edges.length; i++) {
-        let edge = this.edges[i];
-        let otherNode = null;
-
-        if (edge.node1.equals(this)) {
-            otherNode = edge.node2;
-        } else if (edge.node2.equals(this)) {
-            otherNode = edge.node1;
+    if (this.parent){
+        for (let i = 0; i < this.edges.length; i++){
+            this.edges[i].drawEdge();
         }
-
-        if (otherNode) {
-            edge.updateNodes(this, otherNode);
-            edge.drawEdge();
+    }
+    
+    for (let i = 0; i < this.nearbyPositions.length; i++) {
+        let node = this.nearbyPositions[i].node;
+        
+        if(node.edges){
+            for (let j = 0; j < node.edges.length; j++){
+                node.edges[j].drawEdge();
+            }
+            
+        } else if (node.edge){
+            node.edge.drawEdge();
         }
     }
 }
 
 router.prototype.calculateNearbyPositions = function () {
-    this.nearbyPositions = [];
-    for (let i = 0; i < this.clients.length; i++) {
+    let subtreeNodes = getSubtree(this);
+
+    for (let i = 0; i < subtreeNodes.length; i++){
         let entry = {
-            sprite: this.clients[i].sprite,
-            distanceX: this.clients[i].sprite.x - this.sprite.x,
-            distanceY: this.clients[i].sprite.y - this.sprite.y,
+            node: subtreeNodes[i],
+            sprite: subtreeNodes[i].sprite,
+            distanceX: subtreeNodes[i].sprite.x - this.sprite.x,
+            distanceY: subtreeNodes[i].sprite.y - this.sprite.y,
         };
         this.nearbyPositions.push(entry);
     }
-
-    for (let i = 0; i < this.attachedNFs.length; i++) {
-        let entry = {
-            sprite: this.attachedNFs[i].sprite,
-            distanceX: this.attachedNFs[i].sprite.x - this.sprite.x,
-            distanceY: this.attachedNFs[i].sprite.y - this.sprite.y,
-        };
-        this.nearbyPositions.push(entry);
-    }
-
 }
 
 router.prototype.removeEdge = function (edge) {
@@ -297,27 +302,27 @@ router.prototype.removeNF = function (nf) {
 
 router.prototype.destroy = function () {
     this.sprite.destroy();
-    for (let i = 0; i < this.edges.length; i++){
+    for (let i = 0; i < this.edges.length; i++) {
         this.edges[i].destroy();
     }
-    if (this.tooltip){
+    if (this.tooltip) {
         this.tooltip.destroy();
     }
 }
 
 router.prototype.package = function () {
     let nfs = [];
-    for (let i = 0; i < this.attachedNFs.length; i++){
+    for (let i = 0; i < this.attachedNFs.length; i++) {
         let nf = [this.attachedNFs[i].type, this.attachedNFs[i].ID];
         nfs.push(nf);
     }
-    
+
     let clts = [];
-    for (let i = 0; i < this.clients.length; i++){
+    for (let i = 0; i < this.clients.length; i++) {
         let clt = [this.clients[i].type, this.clients[i].ID];
         clts.push(clt);
     }
-    
+
     let routerObj = {
         ID: this.ID,
         type: this.type,

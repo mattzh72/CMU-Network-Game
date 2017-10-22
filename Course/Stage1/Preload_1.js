@@ -7,8 +7,9 @@ Game.Preload_1.prototype = {
     
     //ASSETS FOR MAP
     this.load.tilemap('map', 'Course/Stage1/Map/map_1.json', null, Phaser.Tilemap.TILED_JSON);  
-    this.load.image('tileset1','Course/Stage1/Map/pipe_opening.png');
-    this.load.image('tileset2','Course/Stage1/Map/Rooms/blue_room.png');
+    this.load.image('tileset1','Course/Stage1/Map/pipe.png');
+    this.load.image('tileset2','Course/Stage1/Map/pipe_opening.png');
+    this.load.image('tileset3','Course/Stage1/Map/Rooms/blue_room.png');
     this.load.image('dialogue', 'Modules/Assets/dialogue.png');
         
     //ASSETS FOR CLIENT
@@ -21,6 +22,8 @@ Game.Preload_1.prototype = {
     this.load.image('server2','Course/Stage1/Map/Servers/2.png');
     this.load.image('server3','Course/Stage1/Map/Servers/3.png');
     this.load.image('server4','Course/Stage1/Map/Servers/4.png');
+        
+    this.load.image('tooltip', 'Puzzle/Assets/rectangle_panel.png');
         
     //ASSETS FOR ROUTER
     preloadNetworkFuncAssets(["Router"], this);

@@ -2,6 +2,9 @@
 let PLATFORMER_SCALE = 0.4;
 let PLATFORMER_SPEED = 60;
 
+//The sprite the camera is focused on
+let FOCUSED_SPRITE = null;
+
 
 /**
  * Switches the camera to follow the most recently clicked sprite
@@ -90,7 +93,12 @@ function addSprite(title, txt, image, posX, posY, scale, gravity, inputBool, gam
     sprite.body.gravity.y = gravity;
     sprite.body.collideWorldBounds = true;
 
-    if (inputBool === true) {
+    if (inputBool === true && txt.length > 0) {
+        
+        if (spriteData.dialogue[spriteData.dialogue.length - 1] != "Press ESC to close."){
+            spriteData.dialogue.push("Press ESC to close.");
+        }
+        
         sprite.inputEnabled = inputBool;
         sprite.input.priorityID = 1;
         sprite.input.useHandCursor = true;
@@ -98,19 +106,12 @@ function addSprite(title, txt, image, posX, posY, scale, gravity, inputBool, gam
             spriteData: spriteData,
             gameInstance: gameInstance
         });
+        
+        sprite.events.onInputDown.add(toggleClicked, {
+            sprite: sprite
+        });
 
-        sprite.events.onInputOver.add(tweenScale, {
-            sprite: sprite,
-            xScale: scale + 0.05,
-            yScale: scale + 0.05,
-            gameInstance: gameInstance,
-        });
-        sprite.events.onInputOut.add(tweenScale, {
-            sprite: sprite,
-            xScale: scale,
-            yScale: scale,
-            gameInstance: gameInstance,
-        });
+        setGrowOnHover(sprite, scale, gameInstance);
     }
 
     return spriteData;
@@ -128,4 +129,110 @@ function tweenScale() {
         x: this.xScale,
         y: this.yScale
     }, 200, Phaser.Easing.Linear.In, true);
+}
+
+function setGrowOnHover(sprite, scale, gameInstance) {
+    sprite.events.onInputOver.add(tweenScale, {
+        sprite: sprite,
+        xScale: scale + 0.05,
+        yScale: scale + 0.05,
+        gameInstance: gameInstance,
+    });
+    sprite.events.onInputOut.add(tweenScale, {
+        sprite: sprite,
+        xScale: scale,
+        yScale: scale,
+        gameInstance: gameInstance,
+    });
+}
+
+function addRoomDecor(x, y, scale, imgKey, gameInstance, popupObj, dialogue) {
+    let decor = gameInstance.add.sprite(x, y, imgKey);
+    decor.scale.setTo(scale, scale);
+    decor.anchor.setTo(0.5, 0.5);
+    
+    if (popupObj && dialogue.content.length > 0) {
+        decor.inputEnabled = true;
+        decor.input.priorityID = 1;
+        decor.input.useHandCursor = true;
+        setGrowOnHover(decor, scale, gameInstance);
+
+        dialogue.content.push("Press ESC to close.");
+        let spriteData = {
+            instance: decor,
+            img: imgKey,
+            name: dialogue.title,
+            dialogue: dialogue.content,
+        };
+        decor.events.onInputDown.add(openDialogue, {
+            spriteData: spriteData,
+            gameInstance: gameInstance
+        });
+
+        let popup = gameInstance.add.sprite(decor.x, decor.y, popupObj.key);
+        popup.inputEnabled = true;
+        popup.input.enableDrag();
+
+        let anchor = 0.5;
+        let fullScale = 0;
+
+        if (popupObj.anchor) {
+            anchor = popupObj.anchor;
+        }
+
+        if (popupObj.scale) {
+            fullScale = popupObj.scale;
+        }
+
+        popup.anchor.setTo(anchor, anchor);
+        popup.scale.setTo(0, 0);
+        decor.events.onInputDown.add(popupImage, {
+            img: popup,
+            gameInstance: gameInstance,
+            fullScale: fullScale,
+        });
+        
+        decor.events.onInputDown.add(toggleClicked, {
+            sprite: decor
+        });
+    }
+
+    return decor;
+}
+
+function popupImage() {
+    let img = this.img;
+    let gameInstance = this.gameInstance;
+
+    let fullScale = this.fullScale;
+    if (!fullScale) {
+        fullScale = 1;
+    }
+
+    gameInstance.add.tween(img.scale).to({
+        x: fullScale,
+        y: fullScale
+    }, 1000, Phaser.Easing.Elastic.Out, true);
+
+    img.bringToTop();
+
+    let popupControls = {
+        close: gameInstance.input.keyboard.addKey(Phaser.Keyboard.ESC),
+    };
+
+    //C is used to close dialogue box
+    popupControls.close.onDown.add(function () {
+        img.scale.x = 0;
+        img.scale.y = 0;
+    });
+}
+
+/**
+ * An internal function that is attached to the sprites in the rooms. 
+ * Once a sprite is clicked, this function is called, and changes FOCUSED_SPRITE, the sprite the camera is following, to the recently clicked sprite. 
+ */
+function toggleClicked() {
+    if (dialogueOpen == "moving") {
+        FOCUSED_SPRITE = this.sprite;
+    }
 }

@@ -3,27 +3,26 @@ function packet(src, dest, tags, content) {
     this.dest = dest;
     this.tags = tags;
     this.content = content;
+    this.interface = null;
 
     this.currentLoc = src;
     this.sprite;
     this.alerts = [];
 }
 
-packet.prototype.getNextLoc = function (nw) {
-    if (this.currentLoc.equals(this.dest)) {
-        return null;
-    }
-
-    if (!this.currentLoc.equals(this.src) && this.currentLoc.type === "Client") {
-        return null;
-    }
-
+packet.prototype.setNextLoc = function (nw) {
     let loc = this.currentLoc;
-
-    if (loc instanceof client) {
+    
+    if (loc.equals(this.dest)) {
+        this.currentLoc = null;
+    }
+    else if (!loc.equals(this.src) && loc.type === "Client") {
+        this.currentLoc = null;
+    } 
+    else if (loc instanceof client) {
         let clientRouterEdge = loc.edge;
         let router = clientRouterEdge.getOtherNode(loc);
-        return router;
+        this.currentLoc = router;
     } else if (loc instanceof router) {
         let router = loc;
         let matchedConfig = null;
@@ -36,26 +35,26 @@ packet.prototype.getNextLoc = function (nw) {
 
         if (matchedConfig) {
             if (matchedConfig.Forward === "DROP PACKET") {
-                return null;
-            }
-                        
-            let nextLocArr = matchedConfig.Forward.trim().split(" ");
-            let msg = matchedConfig.Alert;
-            let rewrite = matchedConfig.Rewrite;
+                this.currentLoc = null;
+            } else {                
+                let nextLocArr = matchedConfig.Forward.trim().split(" ");
+                let msg = matchedConfig.Alert;
+                let rewrite = matchedConfig.Rewrite;
 
-            if (msg != "") {
-                let alert = {
-                    loc: loc,
-                    msg: msg,
-                };
-                this.alerts.push(alert);
-            }
-            
-            if (rewrite != ""){
-                this.content = rewrite;
-            }
+                if (msg != "") {
+                    let alert = {
+                        loc: loc,
+                        msg: msg,
+                    };
+                    this.alerts.push(alert);
+                }
 
-            return nw.findNode(nextLocArr[0], nextLocArr[1]);
+                if (rewrite != ""){
+                    this.content = rewrite;
+                }
+
+                this.currentLoc = nw.findNode(nextLocArr[0], nextLocArr[1]);
+            }
         } else {
             let destination = this.dest.type + " " + this.dest.ID;
 
@@ -63,24 +62,29 @@ packet.prototype.getNextLoc = function (nw) {
                 let entry = router.routingTable[i];
                 if (entry.destination.trim().toUpperCase() === destination.toUpperCase()) {
                     let nextLocArr = entry.nextHop.trim().split(" ");
-                    return nw.findNode(nextLocArr[0], nextLocArr[1]);
+                    this.currentLoc = nw.findNode(nextLocArr[0], nextLocArr[1]);
                 }
             }
         }
-    } else {
+    } else if (loc instanceof nf){
         let nf = loc;
-        this.addTags();
-        return nf.connectedNode;
+        this.addTags(); 
+        this.currentLoc = nf.connectedNode;
     }
+    
+    this.interface = loc;
+    return this.currentLoc;
 }
 
 packet.prototype.matchRouterConfig = function (config) {
     let source = config.Source;
     let destination = config.Destination;
+    let interface = config.Interface;
     let tag = config.Tag;
 
     let sourceMatch = false;
     let destinationMatch = false;
+    let interfaceMatch = false;
     let tagMatch = false;
 
     if (source === "*") {
@@ -102,6 +106,16 @@ packet.prototype.matchRouterConfig = function (config) {
 
         destinationMatch = condition1 && condition2;
     }
+    
+    if (interface === "*") {
+        interfaceMatch = true;
+    } else {
+        interface = interface.trim().split(" ");
+        let condition1 = (interface[0].toUpperCase() === this.interface.type.toUpperCase());
+        let condition2 = (interface[1] == this.interface.ID);
+        
+        interfaceMatch = condition1 && condition2;
+    }
 
     if (tag === "*") {
         tagMatch = true;
@@ -109,7 +123,7 @@ packet.prototype.matchRouterConfig = function (config) {
         tagMatch = this.tags.includes(tag);
     }
 
-    return sourceMatch && destinationMatch && tagMatch;
+    return sourceMatch && destinationMatch && tagMatch && interfaceMatch;
 }
 
 packet.prototype.matchNFConfig = function (config) {

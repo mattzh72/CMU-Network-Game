@@ -15,8 +15,8 @@ Game.Preload_Puzzle.prototype = {
         this.load.image('client', 'Puzzle/Assets/computer.png'); 
         
         //Tooltip Assets
-        this.load.image('tooltip', 'Puzzle/Assets/tooltip.png');
-        this.load.image('side_panel', 'Puzzle/Assets/side_square_panel.png');
+        this.load.image('tooltip', 'Puzzle/Assets/rectangle_panel.png');
+        this.load.image('toolbar', 'Puzzle/Assets/rectangle_panel.png');
         this.load.image('packet', 'Puzzle/Assets/packet.png');
         this.load.image('game_guide', 'Puzzle/Assets/game_guide.png');
 

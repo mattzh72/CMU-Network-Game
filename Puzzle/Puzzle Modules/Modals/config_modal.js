@@ -105,7 +105,7 @@ function addNewConfig(event) {
             $(this).autocomplete('search', $(this).val())
         });
     }
-    
+
     $("#Source").autocomplete({
         source: validNetworkAddresses,
         minLength: 0,
@@ -120,8 +120,8 @@ function addNewConfig(event) {
     }).click(function () {
         $(this).autocomplete('search', $(this).val())
     });
-    
-    $( document ).tooltip();
+
+    $(document).tooltip();
 }
 
 function addNewConfigByType(nf) {
@@ -215,16 +215,18 @@ function enableByNames(names) {
 function checkCompleteness(fields) {
     for (let i = 0; i < fields.length; i++) {
         let field = fields[i];
-        if (field.val().length == 0) {
-            field.addClass("ui-state-error");
-            updateTips("Length of input must be greater than 0.");
-            return false;
-        }
+        if (field[0].name !== "Alert" && field[0].name !== "Rewrite") {
+            if (field.val().length == 0) {
+                field.addClass("ui-state-error");
+                updateTips("Length of input must be greater than 0.");
+                return false;
+            }
 
-        if (field.val().replace(/\s+/, "") === "") {
-            field.addClass("ui-state-error");
-            updateTips("Input cannot be solely comprised of spaces.");
-            return false;
+            if (field.val().replace(/\s+/, "") === "") {
+                field.addClass("ui-state-error");
+                updateTips("Input cannot be solely comprised of spaces.");
+                return false;
+            }
         }
     }
 
@@ -233,17 +235,15 @@ function checkCompleteness(fields) {
 
 function checkValid(field, validOptions) {
     let fieldVal = field.val();
-    
+
     let upperCaseFieldVal = fieldVal.toUpperCase();
-    
-    if (upperCaseFieldVal.indexOf("CLIENT") !== -1 || upperCaseFieldVal.indexOf("ROUTER") !== -1){
+
+    if (upperCaseFieldVal.indexOf("CLIENT") !== -1 || upperCaseFieldVal.indexOf("ROUTER") !== -1) {
         fieldVal = fieldVal.toLowerCase();
         fieldVal = fieldVal.charAt(0).toUpperCase() + fieldVal.slice(1);
     }
 
     if (!validOptions.includes(fieldVal)) {
-        console.log(validOptions);
-        console.log(fieldVal);
         field.addClass("ui-state-error");
         updateTips("Could not find this network component.");
         return false;

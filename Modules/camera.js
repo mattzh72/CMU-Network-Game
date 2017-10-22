@@ -1,5 +1,5 @@
 let controls;
-let CAMERA_SPEED = 10;
+let CAMERA_SPEED = 5;
 
 /**
  * Initalizes the control object
@@ -39,15 +39,17 @@ function pollCameraControls(gameInstance) {
         gameInstance.physics.arcade.isPaused = false; //when player clicks on screen after resizing, game continues
     }
 
-    if (controls.up.isDown) {
-        gameInstance.camera.y -= CAMERA_SPEED;
-    } else if (controls.down.isDown) {
-        gameInstance.camera.y += CAMERA_SPEED;
-    }
+    if (dialogueOpen == "false"){
+        if (controls.up.isDown) {
+            gameInstance.camera.y -= CAMERA_SPEED;
+        } else if (controls.down.isDown) {
+            gameInstance.camera.y += CAMERA_SPEED;
+        }
 
-    if (controls.left.isDown) {
-        gameInstance.camera.x -= CAMERA_SPEED;
-    } else if (controls.right.isDown) {
-        gameInstance.camera.x += CAMERA_SPEED;
+        if (controls.left.isDown) {
+            gameInstance.camera.x -= CAMERA_SPEED;
+        } else if (controls.right.isDown) {
+            gameInstance.camera.x += CAMERA_SPEED;
+        }
     }
 }

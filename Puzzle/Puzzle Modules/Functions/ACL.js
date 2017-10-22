@@ -144,9 +144,6 @@ ACL.prototype.initToolTip = function (ID, sprite, gameInstance) {
 ACL.prototype.initializeSprite = function (sprite, ID, gameInstance) {
     this.sprite.anchor.setTo(0.5, 0.5);
     this.sprite.scale.setTo(PUZZLE_SCALE, PUZZLE_SCALE);
-    gameInstance.physics.arcade.enable(this.sprite);
-    this.sprite.body.gravity.y = 0;
-    this.sprite.body.collideWorldBounds = true;
     this.sprite.inputEnabled = true;
     this.sprite.input.enableDrag(true);
     this.sprite.events.onInputDown.add(openModal, {

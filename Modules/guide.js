@@ -9,6 +9,16 @@ let guideSprite;
 function initGuideSprite(text, gameInstance){   
     let guideSpriteData = addSprite(["Game Guide"], text, 'helperSprite', 0, 0, 0.4, 0, true, gameInstance);
     guideSprite = guideSpriteData.instance;
+    addHelperSpriteTooltip(guideSpriteData.instance, gameInstance);
+    guideSprite.events.onInputDown.add(openGameMenu, {
+//        nf: this,
+//        accordion: "#router-accordion",
+//        button: "#router-button-add",
+//        div: "#router-dialog",
+//        displayInformation: tableInfo,
+//        tabs: "#router-tabs",
+        gameInstance: gameInstance,
+    });
     
     return guideSpriteData;
 }
@@ -28,4 +38,25 @@ function updateHelperSpritePos(gameInstance){
     else{
         guideSprite.body.velocity.setTo(0, 0);
     }
+}
+
+function addHelperSpriteTooltip(sprite, gameInstance){
+    let style = {
+        font: "12px Source Sans Pro",
+        fill: 'white',
+        wordWrap: true,
+        wordWrapWidth: 180,
+        boundsAlignH: "center",
+        boundsAlignV: "middle",
+        align: "center",
+    };
+    let text = gameInstance.add.text(0, 0, "Hold SHIFT and click for game menu.", style);
+    text.setTextBounds(0, 0, 200, 50);
+
+    this.tooltip = new Phasetips(gameInstance.game, {
+        targetObject: sprite,
+        context: text,
+        customBackground: gameInstance.add.sprite(0, 0, "tooltip"),
+        padding: 50,
+    });
 }

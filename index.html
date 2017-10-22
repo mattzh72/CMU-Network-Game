@@ -180,7 +180,6 @@
 </style>
 
 <body>
-
     <div id="function-dialog" title="" style="display: none;">
         <div id="function-tabs">
             <ul>
@@ -227,52 +226,105 @@
     </div>
 
     <div id="packet-dialog" title="Deploy A Test Packet" style="display:none">
-        <p class="validateTips" style="font-size: 15px;">Not all fields are required except for Source and Destination. If a field is left blank, the packet will be initialized with nothing in the field.</p>
-        <p style="font-size: 15px;">Hover over the labels for more information.</p>
-        <hr>
-        <form id="new-packet-form">
-            <fieldset id="new-packet-fieldset">
-                <label id="packet-source-label" title="The starting source of the packet. This is where the packet will enter the network." for="packet-source">Source</label>
-                <input type="text" name="packet-source" id="packet-source" class="text ui-widget-content ui-corner-all">
-                <label id="packet-destination-label" title="The destination of the packet. This is where the packet will exit the network." for="packet-destination">Destination</label>
-                <input type="text" name="packet-destination" id="packet-destination" class="text ui-widget-content ui-corner-all">
-                <label id="packet-tags-label" title="Any tags to tag the packet with. If more than one tag, split the tags with a comma ONLY." for="packet-tags">Tag</label>
-                <input type="text" name="packet-tags" id="packet-tags" class="text ui-widget-content ui-corner-all">
-                <label id="packet-content-label" title="The content of the packet. Type anything you want here." for="packet-content">Content</label>
-                <input type="text" name="packet-content" id="packet-content" class="text ui-widget-content ui-corner-all">
-                <button id="packet-button-deploy">Deploy Test Packet</button>
-                <!-- Allow form submission with keyboard without duplicating the dialog button -->
-                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-            </fieldset>
-        </form>
+        <div id="packet-dialog-tabs">
+            <ul>
+                <li><a href="#packet-dialog-tabs-1">Test Packets</a></li>
+                <li><a href="#packet-dialog-tabs-2">Policy Packets</a></li>
+            </ul>
+            <div id="packet-dialog-tabs-1">
+                <p class="validateTips" style="font-size: 15px;">Not all fields are required except for Source and Destination. If a field is left blank, the packet will be initialized with nothing in the field.</p>
+                <p style="font-size: 15px;">Hover over the labels for more information.</p>
+                <hr>
+                <form id="new-packet-form">
+                    <fieldset id="new-packet-fieldset">
+                        <label id="packet-source-label" title="The starting source of the packet. This is where the packet will enter the network." for="packet-source">Source</label>
+                        <input type="text" name="packet-source" id="packet-source" class="text ui-widget-content ui-corner-all">
+                        <label id="packet-destination-label" title="The destination of the packet. This is where the packet will exit the network." for="packet-destination">Destination</label>
+                        <input type="text" name="packet-destination" id="packet-destination" class="text ui-widget-content ui-corner-all">
+                        <label id="packet-tags-label" title="Any tags to tag the packet with. If more than one tag, split the tags with a comma ONLY." for="packet-tags">Tag</label>
+                        <input type="text" name="packet-tags" id="packet-tags" class="text ui-widget-content ui-corner-all">
+                        <label id="packet-content-label" title="The content of the packet. Type anything you want here." for="packet-content">Content</label>
+                        <input type="text" name="packet-content" id="packet-content" class="text ui-widget-content ui-corner-all">
+                        <button id="packet-button-deploy">Deploy Test Packet</button>
+                        <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+                    </fieldset>
+                </form>
+            </div>
+            <div id="packet-dialog-tabs-2">
+<!--                <div id="policy-packet-accordion"></div>-->
+            </div>
+        </div>
     </div>
 
     <div id="game-options-dialog" title="Game Options" style="display:none">
         <div id="game-options-tabs">
             <ul>
-                <li><a href="#game-options-tabs-1">Load</a></li>
-                <li><a href="#game-options-tabs-2">Save</a></li>
-                <li><a href="#game-options-tabs-3">Instructions</a></li>
+                <li><a href="#game-options-tabs-1">Player</a></li>
+                <li><a href="#game-options-tabs-2">Maker</a></li>
             </ul>
             <div id="game-options-tabs-1">
-                <input type="file" id="file-upload" class="text ui-widget-content ui-corner-all">
-                <button id="game-options-load" class="text ui-widget-content ui-corner-all">Load Selected File</button>
-                <textarea readonly id="file-contents-textarea" style="height: 100px; width: 100%;resize: vertical;" class="text ui-widget-content ui-corner-all"></textarea>
-                <button id="game-options-play-game" class="text ui-widget-content ui-corner-all">Play Puzzle File</button>
+                <div id="game-options-player-accordion">
+                    <h3>Load a Game</h3>
+                    <div>
+                        <input type="file" id="file-upload" class="text ui-widget-content ui-corner-all">
+                        <button id="game-options-load" class="text ui-widget-content ui-corner-all">Load Selected File</button>
+                        <textarea readonly id="file-contents-textarea" style="height: 100px; width: 100%;resize: vertical;" class="text ui-widget-content ui-corner-all"></textarea>
+                        <button id="game-options-play-game" class="text ui-widget-content ui-corner-all">Play Puzzle File</button>
+                    </div>
+
+                    <h3>Save Game</h3>
+                    <div>
+                        <p1 style="font-size: 15px;" >Save Progress</p1><br>
+                        <button id="game-options-encode-progress" class="text ui-widget-content ui-corner-all">Encode Progress</button>
+                        <textarea readonly id="game-progress-textarea" style="height: 100px; width: 100%;resize: vertical;" class="text ui-widget-content ui-corner-all"></textarea>
+                        <button id="game-options-download-progress" class="text ui-widget-content ui-corner-all">Download Progress</button>
+                    </div>
+                </div>
             </div>
             <div id="game-options-tabs-2">
-                <button id="game-options-encode-progress" class="text ui-widget-content ui-corner-all">Encode Progress</button>
-                <textarea readonly id="game-progress-textarea" style="height: 100px; width: 100%;resize: vertical;" class="text ui-widget-content ui-corner-all"></textarea>
-                <button id="game-options-download-progress" class="text ui-widget-content ui-corner-all">Download Progress</button>
+                <div id="game-options-maker-accordion">
+                    <h3>Create</h3>
+                    <div>
+                        <p class="validateTips" style="font-size: 15px;">Create a random network.</p>
+                        <hr>
+                        <label id="game-options-new-nw-name" title="The name of your new network." for="nw-name">Name</label>
+                        <input type="text" name="nw-name" id="nw-name" class="text ui-widget-content ui-corner-all" value ="demo">
+                        <label id="game-options-new-levels" title="How many levels in the tree structure your network has." for="nw-levels">Levels</label>
+                        <input type="number" name="nw-levels" id="nw-levels" class="text ui-widget-content ui-corner-all" value ="3">
+                        <label id="game-options-new-min" title="Minimum number of children per parent." for="min-children" style="opacity: 0.5;">Minimum No. Children</label>
+                        <input type="text" name="min-children" id="min-children" class="text ui-widget-content ui-corner-all" value = "2" disabled style="opacity: 0.5;">
+                        <label id="game-options-new-max" title="Maximum number of children per parent." for="max-children" style="opacity: 0.5;">Maximum No. Children</label>
+                        <input type="text" name="max-children" id="max-children" class="text ui-widget-content ui-corner-all" value = "3" disabled style="opacity: 0.5;">
+                        <button id="game-options-create-new-nw" class="text ui-widget-content ui-corner-all">Create New Network</button>
+                    </div>
 
-            </div>
-            <div id="game-options-tabs-3">
+                    <h3>Save</h3>
+                    <div>
+                        <p1 style="font-size: 15px;">Save as Puzzle</p1><br>
+                        <button id="game-options-encode-puzzle" class="text ui-widget-content ui-corner-all">Encode Puzzle</button>
+                        <textarea readonly id="game-puzzle-textarea" style="height: 100px; width: 100%;resize: vertical;" class="text ui-widget-content ui-corner-all"></textarea>
+                        <button id="game-options-download-puzzle" class="text ui-widget-content ui-corner-all">Download Puzzle</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <div id="packet-results-dialog" title="" style="display: none;">
         <p style="font-size: 13px;">Results of the test packet.</p>
+    </div>
+    
+    <div id="main-menu-dialog" title="" style="display: none;">
+        <div id="main-menu-buttons" style="text-align:center;">
+            <table>
+                <button id="mm-tutorial" style="width: 100%; height: 30px; margin-bottom: 10px;">Tutorial</button>
+                <button id="mm-level-1" style="width: 100%; height: 30px; margin-bottom: 10px;">Level 1</button>
+                <button id="mm-level-2" style="width: 100%; height: 30px; margin-bottom: 10px;" >Level 2</button>
+                <button id="mm-level-3" style="width: 100%;  height: 30px;margin-bottom: 10px;">Level 3</button>
+                <button id="mm-puzzle" style="width: 100%;  height: 30px;">Puzzle</button>
+            </table>
+        </div>
     </div>
 
 </body>

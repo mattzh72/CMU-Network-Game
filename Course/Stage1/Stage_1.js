@@ -8,12 +8,12 @@ Game.Stage_1.prototype = {
         this.physics.startSystem(Phaser.Physics.ARCADE);
         addControls(this);
 
-        initMap('map', ['tileset1', 'tileset2'], this);
+        initMap('map', ['tileset1', 'tileset2', 'tileset3'], this);
         initDialogue(this);
 
         //Set up Router Room
         this.routerSprite = setStageRouter(this.world.centerX, 900, this).routingTableSprite;
-        initPacketStream(610, 810, 1000, 810, STREAM_DENSITY_FACTOR, true, this);
+        initPacketStream(610, 790, 1000, 790, STREAM_DENSITY_FACTOR, true, this);
 
         //Set up client sprite
         let client = addSprite("Client", clientDialogue, 'computer', this.world.centerX, 400, 0.5, 0, true, this).instance;
@@ -34,12 +34,13 @@ Game.Stage_1.prototype = {
 
         //set up guide sprite
         let guideTextArr = [
-            "Hey there! I am your game guide through this course. I will show you around and give you tips on how to play! Don't worry about losing me - I'll be always hovering near your mouse. Now press the right arrow key to see what I have to say next.",
             "This level is to teach you the basic components of every network: a client, a router, and a server. You probably heard about these before! They're pretty common.",
+            
             "A CLIENT is usually used by a person to perform some kind of action, like checking your email. This action sends network traffic asking a SERVER to help with the action - and the ROUTER helps direct that traffic in the right direction.", 
+            
             "But don't let me tell you about it - after I'm done talking, you should click around and see what you can find!",
+            
             "Oh and by the way, if you forgot what I said before, you can always press the left arrow key to go back to my previous tips.",
-            "Press C to Close",
         ];
         let guideSpriteData = initGuideSprite(guideTextArr, this);
         this.time.events.add(1000, openDialogue, {
@@ -54,8 +55,9 @@ Game.Stage_1.prototype = {
          * @param {Array} textureArr - An array of texture keys cached in the game state
          */
         function loadTexture() {
-            this.sprite.loadTexture(this.textureArr[Math.floor(this.gameInstance.time.totalElapsedSeconds() % this.textureArr.length)]);
+         this.sprite.loadTexture(this.textureArr[Math.floor(this.gameInstance.time.totalElapsedSeconds() % this.textureArr.length)]);
         }
+        
     },
 
     update: function () {
