@@ -16,7 +16,7 @@ Game.Stage_2 = function(game){
 
         "Each network function can do certain things, and are designed to help network operators fit certain scenarios.",
 
-        "This module introduces four main network functions: Access Control Lists, Stateful Firewalls, Proxies, and Intrusion Prevention Systems.",
+        "This module introduces five main network functions: Access Control Lists, Stateful Firewalls, Proxies, Intrusion Prevention Systems, and Network Address Translation.",
 
         "Click on the colored characters inside the rooms and their tools to learn more!",    
     ];
