@@ -18,6 +18,6 @@ Game.Boot.prototype = {
     },
     
     create:function(){
-        this.state.start('Preload_Puzzle'); 
+        this.state.start('Preload_0'); 
     }
 };
